@@ -55,6 +55,7 @@
     </ApplicationDefinition>
     <Compile Include="Action.cs" />
     <Compile Include="AStarSearcher.cs" />
+    <Compile Include="Node.cs" />
     <Compile Include="State.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

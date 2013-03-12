@@ -81,8 +81,17 @@ namespace WpfApplication1
                     };
             
 
-            AStarSearcher.Search(states, actions, startState, endState);
-        
+            Node solution = AStarSearcher.Search(states, actions, startState, endState);
+
+            Node tracingNode = solution;
+            Console.WriteLine("Løsningen baglæns: ");
+            while (tracingNode.Parent != null)
+            {
+                Console.WriteLine(tracingNode.Action.Name + ", pathcost: " + tracingNode.PathCost +  ", (X,Y): (" + tracingNode.State.X + " , " + tracingNode.State.Y + ")");
+                tracingNode = tracingNode.Parent;
+            }
+            Console.WriteLine("startpunkt(X,Y): (" + startState.X + " , " + startState.Y + ")");
+
         }
 
         private void initialize()
