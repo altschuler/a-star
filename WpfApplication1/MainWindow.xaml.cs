@@ -2,29 +2,23 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace WpfApplication1
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public class MainWindow : Form
     {
-        
+      static public void Main()
+      {
+	Application.Run(new MainWindow());
+      }
+
         public MainWindow()
         {
-            InitializeComponent();
-            
             var states = new List<State>();
             var startState = new State(35, 80); 
             var endState = new State(45,70);
