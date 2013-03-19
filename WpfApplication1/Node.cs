@@ -5,40 +5,37 @@ using System.Text;
 
 namespace ProjectAI.RouteFinding
 {
-    class Node
+  public class Node : IComparable
+  {
+    public double EstimatedTotalPathCost { get; set; }
+    public double PathCost { get; set; }
+    public State State { get; set; }
+    public Node Parent { get; set; }
+    public Action Action { get; set; }
+
+    public Node(Node parent, Action action, State state, State target)
     {
-        public State State;
-        public Node Parent;
-        public Action Action; //The action taken to get to the node
-        public double PathCost;
+      this.State = state;
+      this.Parent = parent;
+      this.Action = action;
+      if (this.Parent != null && this.Action != null)
+	this.PathCost = this.Parent.PathCost + action.Cost;
 
-
-        public Node(Node parent, Action action)
-        {
-            this.State = action.EndState;
-            this.Parent = parent;
-            this.Action = action;
-            this.PathCost = parent.PathCost + action.Cost;// -parent.calculateHValue(problemGoal); MANGLER H(n)
-        }
-
-        public Node(State initialState) //Only for the initial node
-        {
-            this.State = initialState;
-            this.Parent = null;
-            this.Action = null;
-            this.PathCost = 0.0;
-        }
-
-        public double CalculateHValue(State problemGoal)
-        {
-            int x = this.State.X;
-            int y = this.State.Y;
-            return Math.Sqrt(Math.Pow(x-problemGoal.X,2)+Math.Pow(y-problemGoal.Y,2));
-        }
-
-        public double TotalCostForGoal(State goal)
-        {
-            return this.PathCost + this.CalculateHValue(goal);
-        }
+      this.EstimatedTotalPathCost = this.PathCost + Math.Sqrt(Math.Pow(this.State.X - target.X,2) + Math.Pow(this.State.Y - target.Y,2)); 
     }
+
+    public Node(Node parent, Action action, State target) : this(parent, action, action.EndState, target) {}
+
+    public Node(State state, State target) : this(null, null, state, target) {}
+
+    public int CompareTo(object obj)
+    {
+      var other = obj as Node;
+      if (this.EstimatedTotalPathCost > other.EstimatedTotalPathCost)
+	return 1;
+      if (this.EstimatedTotalPathCost < other.EstimatedTotalPathCost)
+	return -1;
+      return 0;
+    }
+  }
 }

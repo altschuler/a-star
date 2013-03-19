@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ProjectAI.RouteFinding
 {
-    class State
+    public class State
     {
         public int X { get; set; }
         public int Y { get; set; }
