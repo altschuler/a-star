@@ -13,6 +13,7 @@ namespace WpfApplication1
         public Action Action; //The action taken to get to the node
         public double PathCost;
 
+
         public Node(Node parent, Action action)
         {
             this.State = action.EndState;
@@ -29,15 +30,16 @@ namespace WpfApplication1
             this.PathCost = 0.0;
         }
 
-        public double calculateHValue(State problemGoal)
+        public double CalculateHValue(State problemGoal)
         {
-            double hValue = 0.0;
             int x = this.State.X;
             int y = this.State.Y;
-            hValue = Math.Sqrt(Math.Pow(x-problemGoal.X,2)+Math.Pow(y-problemGoal.Y,2));
+            return Math.Sqrt(Math.Pow(x-problemGoal.X,2)+Math.Pow(y-problemGoal.Y,2));
+        }
 
-
-            return hValue;
+        public double TotalCostForGoal(State goal)
+        {
+            return this.PathCost + this.CalculateHValue(goal);
         }
     }
 }
