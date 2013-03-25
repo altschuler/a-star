@@ -25,9 +25,13 @@ namespace ProjectAI.RouteFinding
 	  // Filter actions to the ones connected to the current node
 	  foreach (Action action in actions.Where(a => a.StartState.Equals(currentNode.State)))
 	  {
-	    var child = new Node(currentNode, action, end);
-	    if (!explored.Contains(child.State))
-	      frontier.Add(child);
+	      var child = new Node(currentNode, action, end);
+	      Console.WriteLine(child.State);
+	      if (!explored.Contains(child.State))// && !frontier.Any(n => n.State.Equals(child.State)))
+	      {
+		  explored.Add(child.State);
+		  frontier.Add(child);
+	      }
 
 	    // Ligegyldig? A* finder den korteste i forvejen.
 	    //for(int i = 0; i < frontier.Count; i++)

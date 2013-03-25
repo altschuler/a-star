@@ -16,7 +16,7 @@ namespace ProjectAI.RouteFinding
 	// Draw calculated route
 	pen = new Pen(Color.FromArgb(255, 0, 255, 0)) { Width = 3 };
 	var last = kb.End;
-	while (traceNode.Parent != null)
+	while (traceNode != null)
 	{
 	  gfx.DrawLine(pen, last.X * scale, last.Y * scale, 
 		       traceNode.State.X * scale, traceNode.State.Y * scale);

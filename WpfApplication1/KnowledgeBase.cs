@@ -17,7 +17,7 @@ namespace ProjectAI.RouteFinding
       kb.Actions = new List<Action>();
       kb.States = new List<State>();
 
-      var split = data.Split(',');
+      var split = data.Split('\n');
       split = split.Select(s => s.Trim()).ToArray();
       foreach(var entry in split)
       {

@@ -27,11 +27,17 @@ namespace ProjectAI.RouteFinding
 	this.Paint += new PaintEventHandler(this.OnPaint);
 
 	// Load and parse knowledge base
-	var kbFile = Environment.CurrentDirectory + @"/kb.txt";
+	Console.WriteLine("Parsing...");
+	var kbFile = Environment.CurrentDirectory + @"/manhattan.txt";
 	this.Kb = KnowledgeBase.Parse(File.ReadAllText(kbFile));
+	Console.WriteLine("Parsed");
 
 	// Calculate route
+	Console.WriteLine("Searching...");
+	Console.WriteLine("Start:" + this.Kb.Start);
+	Console.WriteLine("End:" + this.Kb.End);
 	this.Solution = AStarSearcher.Search(this.Kb.States, this.Kb.Actions, this.Kb.Start, this.Kb.End);
+	Console.WriteLine("Searched");
       }
 
       private void OnPaint(object sender, PaintEventArgs args)
@@ -39,7 +45,7 @@ namespace ProjectAI.RouteFinding
 	if (this.Solution == null || this.Kb == null) 
 	  return;
 
-	Painter.DrawKnowledgeBase(args.Graphics, this.Solution, this.Kb, 3f);
+	Painter.DrawKnowledgeBase(args.Graphics, this.Solution, this.Kb, 30f);
       }
     }
 }
