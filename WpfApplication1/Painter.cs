@@ -1,35 +1,52 @@
 using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 
 namespace ProjectAI.RouteFinding
 {
   public static class Painter
   {
-    public static void DrawKnowledgeBase(Graphics gfx, Node traceNode, KnowledgeBase kb, float scale)
+    public static void DrawKnowledgeBase(Graphics gfx, Node traceNode, KnowledgeBase kb)
     {
+        int offset = 10;
+        float scale = Math.Max(kb.maxX, kb.maxY);
+        scale = 400 / scale;
+
 	// Draw map of routes
-	var pen = new Pen(Color.Black) { Width = 5 };
-	foreach (var action in kb.Actions)
-	  gfx.DrawLine(pen, action.StartState.X * scale, action.StartState.Y * scale, 
-		       action.EndState.X * scale, action.EndState.Y * scale);
+        var pen = new Pen(Color.FromArgb(100, 1, 1, 0)) { Width = 5 };
+    pen.EndCap = LineCap.ArrowAnchor;
+    pen.StartCap = LineCap.RoundAnchor;
+    foreach (var action in kb.Actions)
+        gfx.DrawLine(pen, action.StartState.X * scale+offset, action.StartState.Y * scale+offset,
+              action.EndState.X * scale+offset, action.EndState.Y * scale+offset);
+	 
 
 	// Draw calculated route
-	pen = new Pen(Color.FromArgb(255, 0, 255, 0)) { Width = 3 };
+	pen = new Pen(Color.FromArgb(255, 0, 255, 0)) { Width = 2.4f };
 	var last = kb.End;
 	while (traceNode != null)
 	{
-	  gfx.DrawLine(pen, last.X * scale, last.Y * scale, 
-		       traceNode.State.X * scale, traceNode.State.Y * scale);
+	  gfx.DrawLine(pen, last.X * scale+offset, last.Y * scale+offset, 
+		       traceNode.State.X * scale+offset, traceNode.State.Y * scale+offset);
 	  last = traceNode.State;
 	  traceNode = traceNode.Parent;
 	}
 
 	// Draw end marker
-	pen = new Pen(Color.FromArgb(255, 0, 0, 255)) { Width = 3 };
+	pen = new Pen(Color.FromArgb(255, 255, 0, 0)) { Width = 3 };
 	var esize = 12;
 	gfx.DrawEllipse(pen, 
-			(int)(kb.End.X * scale - esize * .5), 
-			(int)(kb.End.Y * scale - esize * .5), 
+			(int)(kb.End.X * scale - esize * .5)+offset, 
+			(int)(kb.End.Y * scale - esize * .5)+offset, 
+			esize, esize);
+    
+
+      // Draw start marker
+	pen = new Pen(Color.FromArgb(255, 0, 0, 255)) { Width = 3 };
+	esize = 12;
+	gfx.DrawEllipse(pen, 
+			(int)(kb.Start.X * scale - esize * .5)+offset, 
+			(int)(kb.Start.Y * scale - esize * .5)+offset, 
 			esize, esize);
     }
   }

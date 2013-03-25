@@ -11,15 +11,20 @@ namespace ProjectAI.RouteFinding
       {	
 	PriorityQueue<Node> frontier = new PriorityQueue<Node>(); 
 	List<State> explored = new List<State>();
+    int statesSearched = 0;
 
 	frontier.Add(new Node(start, end));
 
 	while (frontier.Count > 0)
 	{
 	  // Chooses the lowest-cost node in the frontier
-	  Node currentNode = frontier.Pop(); 
-	  if (currentNode.State.Equals(end))
-	    return currentNode;
+	  Node currentNode = frontier.Pop();
+      if (currentNode.State.Equals(end))
+      {
+          Console.WriteLine("Looked through " + statesSearched + " states to find shortest path"); ;
+          return currentNode;
+      }
+	    
 
 	  explored.Add(currentNode.State);
 	  // Filter actions to the ones connected to the current node
@@ -27,6 +32,7 @@ namespace ProjectAI.RouteFinding
 	  {
 	      var child = new Node(currentNode, action, end);
 	      Console.WriteLine(child.State);
+          statesSearched++;
 	      if (!explored.Contains(child.State))// && !frontier.Any(n => n.State.Equals(child.State)))
 	      {
 		  explored.Add(child.State);

@@ -10,6 +10,8 @@ namespace ProjectAI.RouteFinding
     public State End { get; set; }
     public List<Action> Actions { get; set; }
     public List<State> States { get; set; }
+    public int maxX { get; set; }
+    public int maxY { get; set; }
 
     public static KnowledgeBase Parse(string data)
     {
@@ -48,6 +50,8 @@ namespace ProjectAI.RouteFinding
 	var ey = int.Parse(entrySplit[4]);
 	var actionName = entrySplit[2];
 	
+
+
 	var startState = kb.GetOrCreateState(sx, sy);
 	var endState = kb.GetOrCreateState(ex, ey);
 	
@@ -65,6 +69,10 @@ namespace ProjectAI.RouteFinding
 	{
 	  state = new State(px, py);
 	  this.States.Add(state);
+      if (px > this.maxX)
+          this.maxX = px;
+      if (py > this.maxY)
+          this.maxY = py;
 	}
 	return state;
     }

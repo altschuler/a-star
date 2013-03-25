@@ -28,7 +28,8 @@ namespace ProjectAI.RouteFinding
 
 	// Load and parse knowledge base
 	Console.WriteLine("Parsing...");
-	var kbFile = Environment.CurrentDirectory + @"/manhattan.txt";
+    var kbFile = Environment.CurrentDirectory + @"/kb.txt";
+    //var kbFile = Environment.CurrentDirectory + @"/manhattan.txt";
 	this.Kb = KnowledgeBase.Parse(File.ReadAllText(kbFile));
 	Console.WriteLine("Parsed");
 
@@ -45,7 +46,7 @@ namespace ProjectAI.RouteFinding
 	if (this.Solution == null || this.Kb == null) 
 	  return;
 
-	Painter.DrawKnowledgeBase(args.Graphics, this.Solution, this.Kb, 30f);
+	Painter.DrawKnowledgeBase(args.Graphics, this.Solution, this.Kb);
       }
     }
 }
