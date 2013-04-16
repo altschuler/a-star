@@ -2,3 +2,8 @@
 bin/
 obj/
 Properties/
+
+*.sln
+*.suo
+*.csproj
+*.user

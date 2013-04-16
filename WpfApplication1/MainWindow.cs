@@ -28,7 +28,7 @@ namespace ProjectAI.RouteFinding
 
 	    // Load and parse knowledge base
 	    Console.Write("Parsing...");
-	    var kbFile = Environment.CurrentDirectory + @"/manhattan.txt";
+	    var kbFile = Environment.CurrentDirectory + @"/kb.txt";
 	    //var kbFile = Environment.CurrentDirectory + @"/manhattan.txt";
 	    this.Kb = KnowledgeBase.Parse(File.ReadAllText(kbFile));
 	    Console.WriteLine(" done");
