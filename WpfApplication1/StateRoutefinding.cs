@@ -5,20 +5,21 @@ using System.Text;
 
 namespace ProjectAI.RouteFinding
 {
-    public class State
+    public class StateRoutefinding : StateAbstract
     {
         public int X { get; set; }
         public int Y { get; set; }
 
-        public State(int x, int y)
+        public StateRoutefinding(int x, int y)
         {
             this.X = x;
             this.Y = y;
+            this.AvailableActions = new List<ActionRoutefinding>();
         }
 
-	public override string ToString()
-	{
-	    return this.X + "," + this.Y;
-	}
+	    public override string ToString()
+	    {
+	        return this.X + "," + this.Y;
+	    }
     }
 }

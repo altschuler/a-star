@@ -6,7 +6,7 @@ namespace ProjectAI.RouteFinding
 {
   public static class Painter
   {
-    public static void DrawKnowledgeBase(Graphics gfx, Node traceNode, KnowledgeBase kb)
+    public static void DrawKnowledgeBase(Graphics gfx, NodeRoutefinding traceNode, KnowledgeBase kb)
     {
         int offset = 10;
         float scale = Math.Max(kb.maxX, kb.maxY);

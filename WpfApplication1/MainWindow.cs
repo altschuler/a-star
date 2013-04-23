@@ -20,25 +20,35 @@ namespace ProjectAI.RouteFinding
 	}
 
 	public MainWindow()
-	{	
-	    // Setup window
-	    this.Size = new Size(500, 500);
-	    this.Text = "A* Route finding";
-	    this.Paint += new PaintEventHandler(this.OnPaint);
+	{
 
-	    // Load and parse knowledge base
-	    Console.Write("Parsing...");
-	    var kbFile = Environment.CurrentDirectory + @"/kb.txt";
-	    //var kbFile = Environment.CurrentDirectory + @"/manhattan.txt";
-	    this.Kb = KnowledgeBase.Parse(File.ReadAllText(kbFile));
-	    Console.WriteLine(" done");
+//Heuristic function for inference:
+        //Indirect-search cost: Length of clause (number of literals)
 
-	    // Calculate route
-	    Console.Write("Searching...");
-	    this.Solution = AStarSearcher.Search(this.Kb.States, this.Kb.Actions, this.Kb.Start, this.Kb.End);
-	    Console.WriteLine(" done");
-	    Console.WriteLine(String.Format("{0} iterations to find target", this.Solution.Iterations));
+
+        this.RunRoutefinding("A* Route finding", @"/manhattan.txt");
+        //this.RunRoutefinding("A* Route finding", @"/kb.txt");
 	}
+
+    private void RunRoutefinding(String title, String filepath)
+    {
+        // Setup window
+        this.Size = new Size(500, 500);
+        this.Text = title;
+        this.Paint += new PaintEventHandler(this.OnPaint);
+
+        // Load and parse knowledge base
+        Console.Write("Parsing...");
+        var kbFile = Environment.CurrentDirectory + filepath;
+        this.Kb = KnowledgeBase.Parse(File.ReadAllText(kbFile));
+        Console.WriteLine(" done");
+
+        // Calculate route
+        Console.Write("Searching...");
+        this.Solution = AStarSearcher.Search(/*this.Kb.States, this.Kb.Actions,*/ this.Kb.Start, this.Kb.End);
+        Console.WriteLine(" done");
+        Console.WriteLine(String.Format("{0} iterations to find target", this.Solution.Iterations));
+    }
 
 	private void OnPaint(object sender, PaintEventArgs args)
 	{

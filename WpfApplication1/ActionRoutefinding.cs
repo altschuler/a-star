@@ -5,22 +5,16 @@ using System.Text;
 
 namespace ProjectAI.RouteFinding
 {
-  public class Action
+  public class ActionRoutefinding : ActionAbstract
   {
     public String Name { get; set; }
-    public State StartState { get; set; }
-    public State EndState { get; set; }
 
-    private double? _Cost;
-
-    public Action(String name, State startState, State endState)
+    public ActionRoutefinding(String name, StateRoutefinding startState, StateRoutefinding endState) : base(startState, endState)
     {
       this.Name = name;
-      this.StartState = startState;
-      this.EndState = endState;
     }
 
-    public double Cost
+    public override double Cost
     {
       get
       {
