@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 
 namespace ProjectAI.RouteFinding
 {
-    class ActionInference : ActionAbstract
+    public class ActionInference
     {
+        public StateRoutefinding EndState { get; set; }
+        protected double? _Cost;
 
-        public override double Cost
+        public double Cost
         {
             get
             {
@@ -20,6 +22,6 @@ namespace ProjectAI.RouteFinding
             }
         }
 
-        public ActionInference(StateRoutefinding startState, StateRoutefinding endState) : base(startState, endState) { }
+        //public ActionInference(StateRoutefinding startState, StateRoutefinding endState) : base(startState, endState) { }
     }
 }

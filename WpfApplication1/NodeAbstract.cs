@@ -10,12 +10,19 @@ namespace ProjectAI.RouteFinding
     {
         protected double _EstimatedTotalPathCost;
         protected double _PathCost;
-        public StateAbstract State { get; set; }
-        public NodeAbstract Parent { get; set; }
-        public ActionAbstract Action { get; set; }
+        public StateRoutefinding State { get; set; }
+        public StateRoutefinding Target { get; set; }
+        public NodeRoutefinding Parent { get; set; }
+        public ActionRoutefinding Action { get; set; }
 
         public double EstimatedTotalPathCost { get; protected set; }
         public double PathCost { get; protected set; }
+
+        public NodeAbstract(StateAbstract state, StateAbstract target)
+        {
+            //this.State = state;
+            //this.Target = target;
+        }
 
         public int CompareTo(object obj)
         {
