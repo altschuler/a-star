@@ -11,6 +11,7 @@ namespace ProjectAI.RouteFinding
         public StateInference State { get; set; }
         public StateInference Target { get; set; }
         public NodeInference Parent { get; set; }
+        public StateInference Action { get; set; }
         public double PathCost { get; protected set; }
 
         public NodeInference(StateInference startState, StateInference target)//initializing constructor
@@ -21,11 +22,12 @@ namespace ProjectAI.RouteFinding
             this.Parent = null;
         }
 
-        public NodeInference(NodeInference parent, StateInference end, StateInference state)
+        public NodeInference(NodeInference parent, StateInference end, StateInference state, StateInference appliedRule)
         {
             this.Parent = parent;
             this.State = state;
             this.Target = end;
+            this.Action = appliedRule;
             this.PathCost = this.Parent.PathCost + 1;
         }
 

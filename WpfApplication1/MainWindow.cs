@@ -43,10 +43,10 @@ namespace ProjectAI.RouteFinding
         Console.WriteLine("skal løses:");
         var inferenceKB = new KnowledgeBaseInference();
 
-        var rules = new StateInference(new List<Literal>() { new Literal("ja",false) });
+        var rules = new StateInference(new List<Literal>() { new Literal("ja",true) });
 
         inferenceKB.Rules.Add(rules);
-        AStarSearcherInference.Search(new StateInference(new List<Literal>() { new Literal("ja", true) }), new StateInference(), inferenceKB);
+        AStarSearcherInference.Search(new StateInference(new List<Literal>() { new Literal("ja", false) }), new StateInference(), inferenceKB);
     }
 
     private void RunInferenceTest02()
@@ -54,10 +54,10 @@ namespace ProjectAI.RouteFinding
         Console.WriteLine("skal ikke løses:");
         var inferenceKB = new KnowledgeBaseInference();
 
-        var rules = new StateInference(new List<Literal>() { new Literal("ja", false) });
+        var rules = new StateInference(new List<Literal>() { new Literal("ja", true) });
 
         inferenceKB.Rules.Add(rules);
-        AStarSearcherInference.Search(new StateInference(new List<Literal>() { new Literal("ja", false) }), new StateInference(), inferenceKB);
+        AStarSearcherInference.Search(new StateInference(new List<Literal>() { new Literal("ja", true) }), new StateInference(), inferenceKB);
     }
 
     private void RunInferenceTest03()
@@ -67,40 +67,40 @@ namespace ProjectAI.RouteFinding
 
 //1st rule        
         inferenceKB.Rules.Add(new StateInference(new List<Literal>() { 
-            new Literal("hotdrink", true),
-            new Literal("juice", true),
-            new Literal("food", true),
-            new Literal("breakfast", false) }));
+            new Literal("hotdrink", false),
+            new Literal("juice", false),
+            new Literal("food", false),
+            new Literal("breakfast", true) }));
         //2nd
         inferenceKB.Rules.Add(new StateInference(new List<Literal>() { 
-            new Literal("hotdrink", true),
-            new Literal("food", true),
-            new Literal("breakfast", false) }));
+            new Literal("hotdrink", false),
+            new Literal("food", false),
+            new Literal("breakfast", true) }));
 
         inferenceKB.Rules.Add(new StateInference(new List<Literal>() { 
-            new Literal("coffee", true),
-            new Literal("cream", true),
-            new Literal("hotdrink", false) }));
+            new Literal("coffee", false),
+            new Literal("cream", false),
+            new Literal("hotdrink", true) }));
 
         inferenceKB.Rules.Add(new StateInference(new List<Literal>() { 
-            new Literal("tea", true),
-            new Literal("hotdrink", false) }));
+            new Literal("tea", false),
+            new Literal("hotdrink", true) }));
 
         inferenceKB.Rules.Add(new StateInference(new List<Literal>() { 
-            new Literal("toast", true),
-            new Literal("butter", true),
-            new Literal("food", false) }));
+            new Literal("toast", false),
+            new Literal("butter", false),
+            new Literal("food", true) }));
 
         inferenceKB.Rules.Add(new StateInference(new List<Literal>() { 
-            new Literal("egg", true),
-            new Literal("food", false) }));
+            new Literal("egg", false),
+            new Literal("food", true) }));
 
-        inferenceKB.Rules.Add(new StateInference(new List<Literal>() { new Literal("coffee", false) }));
-        inferenceKB.Rules.Add(new StateInference(new List<Literal>() { new Literal("tea", false) }));
-        inferenceKB.Rules.Add(new StateInference(new List<Literal>() { new Literal("toast", false) }));
-        inferenceKB.Rules.Add(new StateInference(new List<Literal>() { new Literal("butter", false) }));
+        inferenceKB.Rules.Add(new StateInference(new List<Literal>() { new Literal("coffee", true) }));
+        inferenceKB.Rules.Add(new StateInference(new List<Literal>() { new Literal("tea", true) }));
+        inferenceKB.Rules.Add(new StateInference(new List<Literal>() { new Literal("toast", true) }));
+        inferenceKB.Rules.Add(new StateInference(new List<Literal>() { new Literal("butter", true) }));
 
-        AStarSearcherInference.Search(new StateInference(new List<Literal>() { new Literal("breakfast", true) }), new StateInference(), inferenceKB);
+        AStarSearcherInference.Search(new StateInference(new List<Literal>() { new Literal("breakfast", false) }), new StateInference(), inferenceKB);
     }
 
 
@@ -111,59 +111,59 @@ namespace ProjectAI.RouteFinding
 
         //1st rule        
         inferenceKB.Rules.Add(new StateInference(new List<Literal>() { 
-            new Literal("okpump", true),
-            new Literal("onpump", true),
-            new Literal("water", false) }));
+            new Literal("okpump", false),
+            new Literal("onpump", false),
+            new Literal("water", true) }));
 
         inferenceKB.Rules.Add(new StateInference(new List<Literal>() { 
-            new Literal("manfill", true),
-            new Literal("water", false) }));
-
-        inferenceKB.Rules.Add(new StateInference(new List<Literal>() { 
-            new Literal("manfill", true),
-            new Literal("onpump", true) }));
+            new Literal("manfill", false),
+            new Literal("water", true) }));
 
         inferenceKB.Rules.Add(new StateInference(new List<Literal>() { 
             new Literal("manfill", false),
             new Literal("onpump", false) }));
+
+        inferenceKB.Rules.Add(new StateInference(new List<Literal>() { 
+            new Literal("manfill", true),
+            new Literal("onpump", true) }));
 //5
         inferenceKB.Rules.Add(new StateInference(new List<Literal>() { 
-            new Literal("water", true),
-            new Literal("okboiler", true),
-            new Literal("onboiler", true),
-            new Literal("steam", false) }));
-
-        inferenceKB.Rules.Add(new StateInference(new List<Literal>() { 
             new Literal("water", false),
-            new Literal("steam", true) }));
-
-        inferenceKB.Rules.Add(new StateInference(new List<Literal>() { 
+            new Literal("okboiler", false),
             new Literal("onboiler", false),
             new Literal("steam", true) }));
 
         inferenceKB.Rules.Add(new StateInference(new List<Literal>() { 
-            new Literal("okboiler", false),
-            new Literal("steam", true) }));
+            new Literal("water", true),
+            new Literal("steam", false) }));
 
         inferenceKB.Rules.Add(new StateInference(new List<Literal>() { 
-            new Literal("steam", true),
-            new Literal("coffee", true),
-            new Literal("hotdrink", false) }));
+            new Literal("onboiler", true),
+            new Literal("steam", false) }));
 
         inferenceKB.Rules.Add(new StateInference(new List<Literal>() { 
-            new Literal("steam", true),
-            new Literal("tea", true),
-            new Literal("hotdrink", false) }));
+            new Literal("okboiler", true),
+            new Literal("steam", false) }));
 
         inferenceKB.Rules.Add(new StateInference(new List<Literal>() { 
+            new Literal("steam", false),
             new Literal("coffee", false),
-            new Literal("tea", false) }));
+            new Literal("hotdrink", true) }));
 
-        inferenceKB.Rules.Add(new StateInference(new List<Literal>() { new Literal("okpump", false) }));
+        inferenceKB.Rules.Add(new StateInference(new List<Literal>() { 
+            new Literal("steam", false),
+            new Literal("tea", false),
+            new Literal("hotdrink", true) }));
+
+        inferenceKB.Rules.Add(new StateInference(new List<Literal>() { 
+            new Literal("coffee", true),
+            new Literal("tea", true) }));
+
+        inferenceKB.Rules.Add(new StateInference(new List<Literal>() { new Literal("okpump", true) }));
         inferenceKB.Rules.Add(new StateInference(new List<Literal>() { new Literal("okboiler", false) }));
-        inferenceKB.Rules.Add(new StateInference(new List<Literal>() { new Literal("onboiler", false) }));
+        inferenceKB.Rules.Add(new StateInference(new List<Literal>() { new Literal("onboiler", true) }));
 
-        AStarSearcherInference.Search(new StateInference(new List<Literal>() { new Literal("hotdrink", true) }), new StateInference(), inferenceKB);
+        AStarSearcherInference.Search(new StateInference(new List<Literal>() { new Literal("hotdrink", false) }), new StateInference(), inferenceKB);
     }
 
 
@@ -173,69 +173,71 @@ namespace ProjectAI.RouteFinding
 
         //1st rule        
         inferenceKB.Rules.Add(new StateInference(new List<Literal>() { 
-            new Literal("okpump", true),
-            new Literal("onpump", true),
-            new Literal("water", false) }));
+            new Literal("okpump", false),
+            new Literal("onpump", false),
+            new Literal("water", true) }));
 
         inferenceKB.Rules.Add(new StateInference(new List<Literal>() { 
-            new Literal("manfill", true),
-            new Literal("water", false) }));
-
-        inferenceKB.Rules.Add(new StateInference(new List<Literal>() { 
-            new Literal("manfill", true),
-            new Literal("onpump", true) }));
+            new Literal("manfill", false),
+            new Literal("water", true) }));
 
         inferenceKB.Rules.Add(new StateInference(new List<Literal>() { 
             new Literal("manfill", false),
             new Literal("onpump", false) }));
+
+        inferenceKB.Rules.Add(new StateInference(new List<Literal>() { 
+            new Literal("manfill", true),
+            new Literal("onpump", true) }));
         //5
         inferenceKB.Rules.Add(new StateInference(new List<Literal>() { 
-            new Literal("water", true),
-            new Literal("okboiler", true),
-            new Literal("onboiler", true),
-            new Literal("steam", false) }));
-
-        inferenceKB.Rules.Add(new StateInference(new List<Literal>() { 
             new Literal("water", false),
-            new Literal("steam", true) }));
-
-        inferenceKB.Rules.Add(new StateInference(new List<Literal>() { 
+            new Literal("okboiler", false),
             new Literal("onboiler", false),
             new Literal("steam", true) }));
 
         inferenceKB.Rules.Add(new StateInference(new List<Literal>() { 
-            new Literal("okboiler", false),
-            new Literal("steam", true) }));
+            new Literal("water", true),
+            new Literal("steam", false) }));
 
-        Console.WriteLine("Steam (should fail):");
-        inferenceKB.Rules.Add(new StateInference(new List<Literal>() { new Literal("okpump", false) }));
-        //inferenceKB.Rules.Add(new StateInference(new List<Literal>() { new Literal("okboiler", false) }));
-        //inferenceKB.Rules.Add(new StateInference(new List<Literal>() { new Literal("onboiler", false) }));
+        inferenceKB.Rules.Add(new StateInference(new List<Literal>() { 
+            new Literal("onboiler", true),
+            new Literal("steam", false) }));
 
-        AStarSearcherInference.Search(new StateInference(new List<Literal>() { new Literal("steam", true) }), new StateInference(), inferenceKB);
+        inferenceKB.Rules.Add(new StateInference(new List<Literal>() { 
+            new Literal("okboiler", true),
+            new Literal("steam", false) }));
+
+        Console.WriteLine("Steam:");
+        //inferenceKB.Rules.Add(new StateInference(new List<Literal>() { new Literal("okpump", true) }));
+        inferenceKB.Rules.Add(new StateInference(new List<Literal>() { new Literal("okboiler", true) }));
+        inferenceKB.Rules.Add(new StateInference(new List<Literal>() { new Literal("water", true) }));
+        inferenceKB.Rules.Add(new StateInference(new List<Literal>() { new Literal("onboiler", true) }));
+
+        AStarSearcherInference.Search(new StateInference(new List<Literal>() { new Literal("steam", false) }), new StateInference(), inferenceKB);
     }
+
     private void EspressoLightTest()
     {
         Console.WriteLine("Espresso-light (skal løses):");
         var inferenceKB = new KnowledgeBaseInference();
 
         inferenceKB.Rules.Add(new StateInference(new List<Literal>() { 
-            new Literal("steam", true),
-            new Literal("coffee", true),
-            new Literal("hotdrink", false) }));
-
-        inferenceKB.Rules.Add(new StateInference(new List<Literal>() { 
-            new Literal("steam", true),
-            new Literal("tea", true),
-            new Literal("hotdrink", false) }));
-
-        inferenceKB.Rules.Add(new StateInference(new List<Literal>() { 
+            new Literal("steam", false),
             new Literal("coffee", false),
-            new Literal("tea", false) }));
+            new Literal("hotdrink", true) }));
 
-        inferenceKB.Rules.Add(new StateInference(new List<Literal>() { new Literal("steam", false) }));
+        inferenceKB.Rules.Add(new StateInference(new List<Literal>() { 
+            new Literal("steam", false),
+            new Literal("tea", false),
+            new Literal("hotdrink", true) }));
 
-        AStarSearcherInference.Search(new StateInference(new List<Literal>() { new Literal("hotdrink", true) }), new StateInference(), inferenceKB);
+        inferenceKB.Rules.Add(new StateInference(new List<Literal>() { 
+            new Literal("coffee", true),
+            new Literal("tea", true) }));
+
+        inferenceKB.Rules.Add(new StateInference(new List<Literal>() { new Literal("steam", true) }));
+
+        AStarSearcherInference.Search(new StateInference(new List<Literal>() { new Literal("hotdrink", false) }), new StateInference(), inferenceKB);
     }
     private void RunInferenceTest06()
     {
@@ -243,19 +245,19 @@ namespace ProjectAI.RouteFinding
         var inferenceKB = new KnowledgeBaseInference();
 
         inferenceKB.Rules.Add(new StateInference(new List<Literal>() { 
-            new Literal("p", true),
-            new Literal("q", false) }));
-
-        inferenceKB.Rules.Add(new StateInference(new List<Literal>() { 
             new Literal("p", false),
-            new Literal("q", false) }));
+            new Literal("q", true) }));
 
         inferenceKB.Rules.Add(new StateInference(new List<Literal>() { 
             new Literal("p", true),
             new Literal("q", true) }));
 
+        inferenceKB.Rules.Add(new StateInference(new List<Literal>() { 
+            new Literal("p", false),
+            new Literal("q", false) }));
 
-        AStarSearcherInference.Search(new StateInference(new List<Literal>() { new Literal("p", false),new Literal("q", false)  }), new StateInference(), inferenceKB);
+
+        AStarSearcherInference.Search(new StateInference(new List<Literal>() { new Literal("p", true),new Literal("q", true)  }), new StateInference(), inferenceKB);
     }
 
     private void RunRoutefinding(String title, String filepath)

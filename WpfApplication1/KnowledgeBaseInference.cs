@@ -13,7 +13,7 @@ namespace ProjectAI.RouteFinding
             this.Rules = new List<StateInference>();
         }
 
-        public NodeInference ApplyResolution(NodeInference node, StateInference action)
+        public NodeInference ApplyResolution(NodeInference node, StateInference action, List<StateInference> explored)
         {
             bool breaked = false;
             var state= new StateInference();
@@ -23,10 +23,11 @@ namespace ProjectAI.RouteFinding
             {
                 foreach (Literal rule in action.Clause)
                 {
-                    if(literal.Name.Equals(rule.Name) && literal.Negated != rule.Negated)
+                    if(literal.Name.Equals(rule.Name) && literal.Proposition != rule.Proposition)
                     {
                         
                         state.Clause = node.State.Clause.Union(action.Clause).Where(l => !l.Name.Equals(literal.Name)).ToList();
+                        state.SortState();
                         int waterCounter = 0;
                         foreach (Literal catLitter in state.Clause)
                         {
@@ -35,14 +36,23 @@ namespace ProjectAI.RouteFinding
                                 waterCounter++;
                             }
                         }
-                        if (waterCounter > 1)
-                        {
-                            //Console.WriteLine("");
-                            //Console.WriteLine("node: " + String.Join("  ", node.State.Clause.Select(l => (l.Negated ? "_" : "") + l.Name + ",").ToList()));
-                            //Console.WriteLine("rule: " + String.Join("  ", action.Clause.Select(l => (l.Negated ? "_" : "") + l.Name + ",").ToList()));
-                            //Console.WriteLine("new node: " + String.Join("  ", state.Clause.Select(l => (l.Negated ? "_" : "") + l.Name + ",").ToList()));
-                            //Console.WriteLine("");
-                        }
+
+
+                        //Console.WriteLine("\nnode: " + String.Join("  ", node.State.Clause.Select(l => (l.Proposition ? "" : "_") + l.Name + ",").ToList())
+                        //    + "\nrule: " + String.Join("  ", action.Clause.Select(l => (l.Proposition ? "" : "_") + l.Name + ",").ToList())
+                        //    + "\nnew node: " + String.Join("  ", state.Clause.Select(l => (l.Proposition ? "" : "_") + l.Name + ",").ToList()) + "\n");
+                        //if(explored.Contains(state))
+                        //    Console.WriteLine("State has been explored before");
+                        
+                        //if (waterCounter > 1)
+                        //{
+                        //    Console.WriteLine("");
+                        //    Console.WriteLine("node: " + String.Join("  ", node.State.Clause.Select(l => (l.Proposition ? "" : "_") + l.Name + ",").ToList()));
+                        //    Console.WriteLine("rule: " + String.Join("  ", action.Clause.Select(l => (l.Proposition ? "" : "_") + l.Name + ",").ToList()));
+                        //    Console.WriteLine("new node: " + String.Join("  ", state.Clause.Select(l => (l.Proposition ? "" : "_") + l.Name + ",").ToList()));
+                        //    Console.WriteLine("");
+                        //}
+                        return new NodeInference(node, node.Target, state,action);
                         breaked = true;
                         break;
                     }
@@ -68,16 +78,16 @@ namespace ProjectAI.RouteFinding
                         Literal first = state.Clause.ElementAt(i);
                         Literal second = state.Clause.ElementAt(j);
 
-                        if (first.Name.Equals(second.Name) && first.Negated != second.Negated)
+                        if (first.Name.Equals(second.Name) && first.Proposition != second.Proposition)
                         {
-                            //Console.WriteLine("duplicate detected: " + String.Join("  ", state.Clause.Select(l => (l.Negated ? "_" : "") + l.Name + ",").ToList()));
+                            //Console.WriteLine("duplicate detected: " + String.Join("  ", state.Clause.Select(l => (l.Proposition ? "" : "_") + l.Name + ",").ToList()));
                             duplicate = true;
                             firstIndex = i;
                             firstName = first.Name;
                             secondIndex = j;
                         }
 
-                        if (first.Name.Equals(second.Name) && first.Negated == second.Negated)
+                        if (first.Name.Equals(second.Name) && first.Proposition == second.Proposition)
                         {
                             throw new Exception("Failed resolution #666");
                         }
@@ -89,7 +99,7 @@ namespace ProjectAI.RouteFinding
                     {
                         state.Clause.RemoveAt(0);
                         state.Clause.RemoveAt(0);
-                        return new NodeInference(node, node.Target, state);
+                        return new NodeInference(node, node.Target, state,action);
                     }
                     state.Clause.RemoveAt(firstIndex);
                     state.Clause.RemoveAt(secondIndex - 1);
@@ -97,12 +107,12 @@ namespace ProjectAI.RouteFinding
                     //state.Clause.Add(new Literal(firstName, false));
 
 
-                    //Console.WriteLine("fixed node: " + String.Join("  ", state.Clause.Select(l => (l.Negated ? "_" : "") + l.Name + ",").ToList()));
+                    //Console.WriteLine("fixed node: " + String.Join("  ", state.Clause.Select(l => (l.Proposition ? "" : "_") + l.Name + ",").ToList()));
                 }else
                     stupidToggle = false;
             }
 
-            return new NodeInference(node, node.Target, state);
+            return new NodeInference(node, node.Target, state,action);
 
 
             
@@ -113,14 +123,45 @@ namespace ProjectAI.RouteFinding
 
         public List<StateInference> ActionsForNode(NodeInference node)
         {
+            List<StateInference> relevantRules = new List<StateInference>();
+            foreach (var state in this.Rules)
+            {
+                relevantRules.Add(state);
+            }
+            //if (relevantRules.Contains(node.Action))
+            //{
+            //    //Console.WriteLine("removeing "+String.Join("  ", node.Action.Clause.Select(l => (l.Proposition ? "" : "_") + l.Name + ",").ToList()));
+            //    relevantRules.Remove(node.Action);
+            //}
+
+            NodeInference parent = node.Parent;
+            //while (parent != null)
+            //{
+
+            //    if (relevantRules.Contains(parent.Action))
+            //        relevantRules.Remove(parent.Action);
+
+            //    parent = parent.Parent; //lol, hvor meta
+            //}
+
+            parent = node.Parent;
+            while (parent != null)
+            {
+                relevantRules.Add(parent.State);
+
+                parent = parent.Parent; //lol, hvor meta
+            }
+//Ovenstående er et forsøg på at anvende anscestor rigtigt.
+
             List<StateInference> actions = new List<StateInference>();
-            foreach (var state in Rules)
+            //foreach (var state in Rules)
+            foreach (var state in relevantRules)
             {
                 foreach (var literal in state.Clause)
                 {
                     foreach (var innerLiterat in node.State.Clause)
                     {
-                        if (innerLiterat.Name.Equals(literal.Name) && innerLiterat.Negated != literal.Negated)
+                        if (innerLiterat.Name.Equals(literal.Name) && innerLiterat.Proposition != literal.Proposition)
                         {
                             actions.Add(state);
                         }
