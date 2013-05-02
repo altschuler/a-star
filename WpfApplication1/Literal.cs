@@ -27,6 +27,11 @@ namespace ProjectAI.RouteFinding
 
             return thisTempName.CompareTo(otherTempName);
         }
+
+        public override bool Equals(Object other)
+        {
+            return (this.Name.Equals(((Literal)other).Name) && this.Proposition == ((Literal)other).Proposition);
+        }
     }
 
 }

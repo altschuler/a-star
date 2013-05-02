@@ -160,7 +160,8 @@ namespace ProjectAI.RouteFinding
             new Literal("tea", true) }));
 
         inferenceKB.Rules.Add(new StateInference(new List<Literal>() { new Literal("okpump", true) }));
-        inferenceKB.Rules.Add(new StateInference(new List<Literal>() { new Literal("okboiler", false) }));
+        //inferenceKB.Rules.Add(new StateInference(new List<Literal>() { new Literal("manfill", true) }));
+        inferenceKB.Rules.Add(new StateInference(new List<Literal>() { new Literal("okboiler", true) }));
         inferenceKB.Rules.Add(new StateInference(new List<Literal>() { new Literal("onboiler", true) }));
 
         AStarSearcherInference.Search(new StateInference(new List<Literal>() { new Literal("hotdrink", false) }), new StateInference(), inferenceKB);
@@ -208,12 +209,12 @@ namespace ProjectAI.RouteFinding
             new Literal("steam", false) }));
 
         Console.WriteLine("Steam:");
-        //inferenceKB.Rules.Add(new StateInference(new List<Literal>() { new Literal("okpump", true) }));
-        inferenceKB.Rules.Add(new StateInference(new List<Literal>() { new Literal("okboiler", true) }));
-        inferenceKB.Rules.Add(new StateInference(new List<Literal>() { new Literal("water", true) }));
+        inferenceKB.Rules.Add(new StateInference(new List<Literal>() { new Literal("okpump", true) }));
+        inferenceKB.Rules.Add(new StateInference(new List<Literal>() { new Literal("okboiler", false) }));
+        //inferenceKB.Rules.Add(new StateInference(new List<Literal>() { new Literal("water", true) }));
         inferenceKB.Rules.Add(new StateInference(new List<Literal>() { new Literal("onboiler", true) }));
 
-        AStarSearcherInference.Search(new StateInference(new List<Literal>() { new Literal("steam", false) }), new StateInference(), inferenceKB);
+        AStarSearcherInference.Search(new StateInference(new List<Literal>() { new Literal("steam", true) }), new StateInference(), inferenceKB);
     }
 
     private void EspressoLightTest()

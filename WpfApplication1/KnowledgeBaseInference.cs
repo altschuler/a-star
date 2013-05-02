@@ -25,17 +25,53 @@ namespace ProjectAI.RouteFinding
                 {
                     if(literal.Name.Equals(rule.Name) && literal.Proposition != rule.Proposition)
                     {
+                        state.Clause = node.State.Clause.Concat(action.Clause).ToList();
+                        //Console.WriteLine(String.Join("  ", state.Clause.Select(l => (l.Proposition ? "" : "_") + l.Name + ",").ToList()));
+                        //state.Clause.Union(new List<Literal>());
+                        //Console.WriteLine(String.Join("  ", state.Clause.Select(l => (l.Proposition ? "" : "_") + l.Name + ",").ToList()));
                         
-                        state.Clause = node.State.Clause.Union(action.Clause).Where(l => !l.Name.Equals(literal.Name)).ToList();
-                        state.SortState();
-                        int waterCounter = 0;
-                        foreach (Literal catLitter in state.Clause)
+//Remove ONE positive
+                        for (int i = 0; i < state.Clause.Count; i++)
                         {
-                            if (catLitter.Name.Equals("water"))
+                            Literal litz = state.Clause.ElementAt(i);
+                            if (litz.Name.Equals(rule.Name) && litz.Proposition)
                             {
-                                waterCounter++;
+                                state.Clause.RemoveAt(i);
+                                break;
                             }
                         }
+//Remove ONE negation
+                        for (int i = 0; i < state.Clause.Count; i++)
+                        {
+                            Literal litz = state.Clause.ElementAt(i);
+                            if (litz.Name.Equals(rule.Name) && !litz.Proposition)
+                            {
+                                state.Clause.RemoveAt(i);
+                                break;
+                            }
+                        }
+
+                        var ls = new List<Literal>();
+                        foreach (var lit in state.Clause)
+                        {
+                            var found = false;
+                            foreach (var litInner in ls)
+                            {
+                                if (litInner.Equals(lit))
+                                    found = true;
+                            }
+                            if (!found) ls.Add(lit);
+                        }
+                        state.Clause = ls;
+                        //Console.WriteLine(String.Join("  ", state.Clause.Select(l => (l.Proposition ? "" : "_") + l.Name + ",").ToList()));
+                        state.SortState();
+                        return new NodeInference(node, node.Target, state, action);
+                        //if (rule.Name.Equals("steam"))
+                        //{
+                        //    Console.WriteLine("what up?! "+String.Join("  ", state.Clause.Select(l => (l.Proposition ? "" : "_") + l.Name + ",").ToList()));
+                        //}
+
+                        
 
 
                         //Console.WriteLine("\nnode: " + String.Join("  ", node.State.Clause.Select(l => (l.Proposition ? "" : "_") + l.Name + ",").ToList())
@@ -43,16 +79,8 @@ namespace ProjectAI.RouteFinding
                         //    + "\nnew node: " + String.Join("  ", state.Clause.Select(l => (l.Proposition ? "" : "_") + l.Name + ",").ToList()) + "\n");
                         //if(explored.Contains(state))
                         //    Console.WriteLine("State has been explored before");
+
                         
-                        //if (waterCounter > 1)
-                        //{
-                        //    Console.WriteLine("");
-                        //    Console.WriteLine("node: " + String.Join("  ", node.State.Clause.Select(l => (l.Proposition ? "" : "_") + l.Name + ",").ToList()));
-                        //    Console.WriteLine("rule: " + String.Join("  ", action.Clause.Select(l => (l.Proposition ? "" : "_") + l.Name + ",").ToList()));
-                        //    Console.WriteLine("new node: " + String.Join("  ", state.Clause.Select(l => (l.Proposition ? "" : "_") + l.Name + ",").ToList()));
-                        //    Console.WriteLine("");
-                        //}
-                        return new NodeInference(node, node.Target, state,action);
                         breaked = true;
                         break;
                     }
@@ -63,7 +91,7 @@ namespace ProjectAI.RouteFinding
 
 //Fjerner resten af modsatte literals..            
             bool stupidToggle = true;
-
+            stupidToggle = false;
             while(stupidToggle)
             {
                 bool duplicate = false;
@@ -128,22 +156,25 @@ namespace ProjectAI.RouteFinding
             {
                 relevantRules.Add(state);
             }
-            //if (relevantRules.Contains(node.Action))
-            //{
-            //    //Console.WriteLine("removeing "+String.Join("  ", node.Action.Clause.Select(l => (l.Proposition ? "" : "_") + l.Name + ",").ToList()));
-            //    relevantRules.Remove(node.Action);
-            //}
 
             NodeInference parent = node.Parent;
-            //while (parent != null)
-            //{
+//Må kun bruge regel fra KB én gang pr. søge-gren
+/*
+            if (relevantRules.Contains(node.Action))
+            {
+                //Console.WriteLine("removeing "+String.Join("  ", node.Action.Clause.Select(l => (l.Proposition ? "" : "_") + l.Name + ",").ToList()));
+                relevantRules.Remove(node.Action);
+            }
 
-            //    if (relevantRules.Contains(parent.Action))
-            //        relevantRules.Remove(parent.Action);
+            while (parent != null)
+            {
 
-            //    parent = parent.Parent; //lol, hvor meta
-            //}
+                if (relevantRules.Contains(parent.Action))
+                    relevantRules.Remove(parent.Action);
 
+                parent = parent.Parent; //lol, hvor meta
+            }
+            */
             parent = node.Parent;
             while (parent != null)
             {
