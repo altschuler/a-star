@@ -1,0 +1,10 @@
+-hotdrink -juice -food breakfast
+-hotdrink -food breakfast
+-coffee -cream hotdrink
+-tea hotdrink
+-toast -butter food
+-egg food
+coffee
+tea
+toast
+butter
