@@ -66,80 +66,11 @@ namespace ProjectAI.RouteFinding
                         //Console.WriteLine(String.Join("  ", state.Clause.Select(l => (l.Proposition ? "" : "_") + l.Name + ",").ToList()));
                         state.SortState();
                         return new NodeInference(node, node.Target, state, action);
-                        //if (rule.Name.Equals("steam"))
-                        //{
-                        //    Console.WriteLine("what up?! "+String.Join("  ", state.Clause.Select(l => (l.Proposition ? "" : "_") + l.Name + ",").ToList()));
-                        //}
-
-                        
-
-
-                        //Console.WriteLine("\nnode: " + String.Join("  ", node.State.Clause.Select(l => (l.Proposition ? "" : "_") + l.Name + ",").ToList())
-                        //    + "\nrule: " + String.Join("  ", action.Clause.Select(l => (l.Proposition ? "" : "_") + l.Name + ",").ToList())
-                        //    + "\nnew node: " + String.Join("  ", state.Clause.Select(l => (l.Proposition ? "" : "_") + l.Name + ",").ToList()) + "\n");
-                        //if(explored.Contains(state))
-                        //    Console.WriteLine("State has been explored before");
-
-                        
-                        breaked = true;
-                        break;
                     }
-                    if (breaked)
-                        break;
                 }
             }
 
 //Fjerner resten af modsatte literals..            
-            bool stupidToggle = true;
-            stupidToggle = false;
-            while(stupidToggle)
-            {
-                bool duplicate = false;
-                string firstName = "";
-                int firstIndex = 0;
-                int secondIndex = 0;
-
-                for (int i = 0; i < state.Clause.Count - 1; i++)
-                {
-                    for (int j = i + 1; j < state.Clause.Count; j++)
-                    {
-                        Literal first = state.Clause.ElementAt(i);
-                        Literal second = state.Clause.ElementAt(j);
-
-                        if (first.Name.Equals(second.Name) && first.Proposition != second.Proposition)
-                        {
-                            //Console.WriteLine("duplicate detected: " + String.Join("  ", state.Clause.Select(l => (l.Proposition ? "" : "_") + l.Name + ",").ToList()));
-                            duplicate = true;
-                            firstIndex = i;
-                            firstName = first.Name;
-                            secondIndex = j;
-                        }
-
-                        if (first.Name.Equals(second.Name) && first.Proposition == second.Proposition)
-                        {
-                            throw new Exception("Failed resolution #666");
-                        }
-                    }
-                }
-                if (duplicate)
-                {
-                    if (state.Clause.Count == 2)
-                    {
-                        state.Clause.RemoveAt(0);
-                        state.Clause.RemoveAt(0);
-                        return new NodeInference(node, node.Target, state,action);
-                    }
-                    state.Clause.RemoveAt(firstIndex);
-                    state.Clause.RemoveAt(secondIndex - 1);
-                    //Console.WriteLine("nedenstående linje burde være her jf. Dan True");
-                    //state.Clause.Add(new Literal(firstName, false));
-
-
-                    //Console.WriteLine("fixed node: " + String.Join("  ", state.Clause.Select(l => (l.Proposition ? "" : "_") + l.Name + ",").ToList()));
-                }else
-                    stupidToggle = false;
-            }
-
             return new NodeInference(node, node.Target, state,action);
 
 
