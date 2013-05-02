@@ -7,10 +7,11 @@ namespace ProjectAI.RouteFinding
 {
     public static class AStarSearcherInference
     {
-        public static SearchResult Search(StateInference start, StateInference end, KnowledgeBaseInference kb)
+        public static SearchResultInference Search(StateInference start, StateInference end, KnowledgeBaseInference kb)
         {
             //Start_state er negeret "det man vil vise"
             //End_state er [], den tomme klausul
+
             var frontier = new PriorityQueue<NodeInference>();
             var explored = new List<StateInference>();
             var statesSearched = 0; //Bliver kun brugt af os af ren interesse
@@ -33,19 +34,18 @@ namespace ProjectAI.RouteFinding
                 //Console.WriteLine(String.Join("  ", currentNode.State.Clause.Select(l => (l.Proposition ? "" : "_") + l.Name + ",").ToList()));
                 if (currentNode.State.Clause.Count == 0)
                 {
-                    Console.WriteLine(statesSearched);
-                    Console.WriteLine(String.Join("  ", currentNode.State.Clause.Select(l => (l.Proposition ? "" : "_") + l.Name + ",").ToList()));
+                    //Console.WriteLine(statesSearched);
+		    //Console.WriteLine(String.Join("  ", currentNode.State.Clause.Select(l => (l.Proposition ? "" : "_") + l.Name + ",").ToList()));
                     NodeInference parent = currentNode.Parent;
 
                     while (parent != null)
                     {
-                        Console.WriteLine(String.Join("  ", parent.State.Clause.Select(l => (l.Proposition ? "" : "_") + l.Name + ",").ToList()));
+    //                    Console.WriteLine(String.Join("  ", parent.State.Clause.Select(l => (l.Proposition ? "" : "_") + l.Name + ",").ToList()));
                         parent = parent.Parent;
                     }
 
-                    Console.WriteLine("Solution found");
-                    return null;
-                    //return new SearchResult(currentNode, statesSearched);
+                    //Console.WriteLine("Solution found");
+                    return new SearchResultInference(statesSearched, true);
                 }
 
                 explored.Add(currentNode.State);
@@ -77,9 +77,9 @@ namespace ProjectAI.RouteFinding
                     }
                 }
             }
-            Console.WriteLine(statesSearched);
-            Console.WriteLine("No solutions found");
-            return null;
+//            Console.WriteLine(statesSearched);
+//            Console.WriteLine("No solutions found");
+	    return new SearchResultInference(statesSearched, false);
         }
     }
 }

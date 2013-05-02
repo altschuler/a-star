@@ -1,0 +1,15 @@
+-ok-pump -on-pump water
+-man-fill water
+-man-fill -on-pump
+man-fill on-pump
+-water -ok-boiler -on-boiler steam
+water -steam
+on-boiler -steam
+ok-boiler -steam
+-steam -coffee hot-drink
+-steam -tea hot-drink
+coffee tea
+
+ok-pump
+ok-boiler
+on-boiler
