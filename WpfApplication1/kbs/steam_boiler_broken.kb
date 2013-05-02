@@ -1,0 +1,11 @@
+-okpump -onpump water
+-manfill water
+-manfill -onpump
+manfill onpump
+-water -okboiler -onboiler steam
+water -steam
+onboiler -steam
+okboiler -steam
+-okboiler
+onboiler
+okpump

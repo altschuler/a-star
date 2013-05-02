@@ -18,13 +18,13 @@ namespace ProjectAI.RouteFinding
         public StateInference(List<Literal> clause)
         {
             this.Clause = clause;
-            this.SortState();
+            //this.SortState();
         }
 
-        public void SortState()
-        {
-            this.Clause.Sort(delegate(Literal item1, Literal item2) { return item1.CompareLiterals(item2); });
-        }
+        //public void SortState()
+        //{
+        //    this.Clause.Sort(delegate(Literal item1, Literal item2) { return item1.CompareLiterals(item2); });
+        //}
 
         public override bool Equals(object obj)
         {

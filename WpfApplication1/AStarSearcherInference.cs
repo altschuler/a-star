@@ -16,60 +16,26 @@ namespace ProjectAI.RouteFinding
             var explored = new List<StateInference>();
             var statesSearched = 0; //Bliver kun brugt af os af ren interesse
 
-            frontier.Add(new NodeInference(start, end));
+            NodeInference firstNode = new NodeInference(start, end);
+
+            //Console.WriteLine(String.Join("  ", firstNode.State.Clause.Select(l => (l.Proposition ? "" : "_") + l.Name + ",").ToList()));
+
+            frontier.Add(firstNode);
 
             while (frontier.Count > 0)
             {
                 // Chooses the lowest-cost node in the frontier
                 NodeInference currentNode = frontier.Pop();
-
-                //if(kb.Rules.Count % 100 == 0)
-                //    Console.WriteLine("Rules.Count: " + kb.Rules.Count);
-                //if (frontier.Count % 200 == 0)
-                //{
-                //    Console.WriteLine(String.Join("  ", currentNode.State.Clause.Select(l => (l.Proposition ? "" : "_") + l.Name + ",").ToList()));
-                //    Console.WriteLine("frontier.Count: " + frontier.Count);
-                //    if (frontier.Any())
-                //    {
-                //        NodeInference lastNode = frontier.ElementAt(frontier.Count - 1);
-                //        Console.WriteLine(String.Join("  ", lastNode.State.Clause.Select(l => (l.Proposition ? "" : "_") + l.Name + ",").ToList()));
-                //    }
-                //}
-                //Console.WriteLine(String.Join("  ", currentNode.State.Clause.Select(l => (l.Proposition ? "" : "_") + l.Name + ",").ToList()));
+                
+                
                 if (currentNode.State.Clause.Count == 0)
                 {
-                    //Console.WriteLine(statesSearched);
-                    //Console.WriteLine(String.Join("  ", currentNode.State.Clause.Select(l => (l.Proposition ? "" : "_") + l.Name + ",").ToList()));
-                    
                     NodeInference parent = currentNode.Parent;
-                    //Console.WriteLine("    applied rule: " + String.Join("  ", currentNode.Action.Clause.Select(l => (l.Proposition ? "" : "_") + l.Name + ",").ToList()));
-                    //while (parent != null)
-                    //{
-                    //    Console.WriteLine(String.Join("  ", parent.State.Clause.Select(l => (l.Proposition ? "" : "_") + l.Name + ",").ToList()));
-                    //    if (parent.Action != null)
-                    //        Console.WriteLine("    applied rule: " + String.Join("  ", parent.Action.Clause.Select(l => (l.Proposition ? "" : "_") + l.Name + ",").ToList()));
-                    //    parent = parent.Parent;
-                    //}
-
-                    //Console.WriteLine(statesSearched);
-		    //Console.WriteLine(String.Join("  ", currentNode.State.Clause.Select(l => (l.Proposition ? "" : "_") + l.Name + ",").ToList()));
-
-                    //while (parent != null)
-                    //{
-                    //    Console.WriteLine(String.Join("  ", parent.State.Clause.Select(l => (l.Proposition ? "" : "_") + l.Name + ",").ToList()));
-                    //    parent = parent.Parent;
-                    //}
-
-
-                    //Console.WriteLine("Solution found");
                     return new SearchResultInference(statesSearched, true);
                 }
 
                 explored.Add(currentNode.State);
 
-                
-                //List<ActionRoutefinding> availableActions = currentNode.State.AvailableActions
-                //Get available Actions to the State of the current Node
                 List<StateInference> actions = kb.ActionsForNode(currentNode);
                 
                 List<NodeInference> children = new List<NodeInference>();
@@ -90,8 +56,7 @@ namespace ProjectAI.RouteFinding
                     }
                 }
             }
-//            Console.WriteLine(statesSearched);
-//            Console.WriteLine("No solutions found");
+
 	    return new SearchResultInference(statesSearched, false);
         }
     }

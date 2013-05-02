@@ -15,20 +15,16 @@ namespace ProjectAI.RouteFinding
 
         public NodeInference ApplyResolution(NodeInference node, StateInference action, List<StateInference> explored)
         {
-            bool breaked = false;
             var state= new StateInference();
 
-//fjerner ét literal-par og merger
             foreach (Literal literal in node.State.Clause)
             {
                 foreach (Literal rule in action.Clause)
                 {
                     if(literal.Name.Equals(rule.Name) && literal.Proposition != rule.Proposition)
                     {
+//Merger samtlige literals fra de to clauses
                         state.Clause = node.State.Clause.Concat(action.Clause).ToList();
-                        //Console.WriteLine(String.Join("  ", state.Clause.Select(l => (l.Proposition ? "" : "_") + l.Name + ",").ToList()));
-                        //state.Clause.Union(new List<Literal>());
-                        //Console.WriteLine(String.Join("  ", state.Clause.Select(l => (l.Proposition ? "" : "_") + l.Name + ",").ToList()));
                         
 //Remove ONE positive
                         for (int i = 0; i < state.Clause.Count; i++)
@@ -50,7 +46,7 @@ namespace ProjectAI.RouteFinding
                                 break;
                             }
                         }
-
+//Removes duplicates such that "a OR a OR b" becomes "a OR b"
                         var ls = new List<Literal>();
                         foreach (var lit in state.Clause)
                         {
@@ -63,8 +59,7 @@ namespace ProjectAI.RouteFinding
                             if (!found) ls.Add(lit);
                         }
                         state.Clause = ls;
-                        //Console.WriteLine(String.Join("  ", state.Clause.Select(l => (l.Proposition ? "" : "_") + l.Name + ",").ToList()));
-                        state.SortState();
+//                        state.SortState(); //Used for debugging
                         return new NodeInference(node, node.Target, state, action);
                     }
                 }

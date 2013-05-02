@@ -12,7 +12,7 @@ namespace ProjectAI.RouteFinding
   public class MainWindow : Form
   {
     private KnowledgeBase Kb;
-
+    private int InferenceTestCounter = 0;
     static public void Main()
     {
       Application.Run(new MainWindow());
@@ -23,31 +23,43 @@ namespace ProjectAI.RouteFinding
       //Heuristic function for inference:
       //Indirect-search cost: Length of clause (number of literals)
 
-      this.TestString("Simple success", "ja", "-ja", true);
-      this.TestString("Simple failure", "ja", "ja", false);
-      this.TestFile("Breakfast", "kbs/breakfast.kb", "-breakfast", true);
-      this.TestFile("Espresso", "kbs/espresso.kb", "-hot-drink", true);
-      this.TestFile("Espresso light", "kbs/espresso_light.kb", "-hotdrink", true);
-      this.TestFile("Steam", "kbs/steam.kb", "-steam", true);
-      this.TestFile("pq", "kbs/pq.kb", "p q", true);
+        this.TestAllInference();
 
       //this.RunRoutefinding("A* Route finding", @"/manhattan.txt");
       //this.RunRoutefinding("A* Route finding", @"/kb.txt");
       Application.Exit();
     }
+
+    private void TestAllInference()
+    {
+        int succesCounter = 0;
+        if(this.TestString("Simple success", "ja", "-ja", true)) succesCounter++;
+        if (this.TestString("Simple failure", "ja", "ja", false)) succesCounter++;
+        if (this.TestFile("Breakfast", "kbs/breakfast.kb", "-breakfast", true)) succesCounter++;
+        if (this.TestFile("pq", "kbs/pq.kb", "q p", true)) succesCounter++;
+        if (this.TestFile("Espresso light", "kbs/espresso_light.kb", "-hot-drink", true)) succesCounter++;
+        if (this.TestFile("Steam", "kbs/steam.kb", "-steam", true)) succesCounter++;
+        if (this.TestFile("No steam (boiler off)", "kbs/steam_boiler_off.kb", "steam", true)) succesCounter++;
+        if (this.TestFile("No steam (boiler broken)", "kbs/steam_boiler_broken.kb", "steam", true)) succesCounter++;
+        if (this.TestFile("Espresso", "kbs/espresso.kb", "-hot-drink", true)) succesCounter++;
+
+        double succesRatio = succesCounter / (double)this.InferenceTestCounter;
+        Console.WriteLine("Inference-succes-ratio: " + succesRatio + ", passed " + succesCounter + " of " + this.InferenceTestCounter);
+    }
     
-    private void TestString(string name, string str, string target, bool shouldSucceed)
+    private bool TestString(string name, string str, string target, bool shouldSucceed)
     {
-      this.Test(name, InferenceParser.ParseString(str), target, shouldSucceed);
+      return this.Test(name, InferenceParser.ParseString(str), target, shouldSucceed);
     }
 
-    private void TestFile(string name, string file, string target, bool shouldSucceed)
+    private bool TestFile(string name, string file, string target, bool shouldSucceed)
     {
-      this.Test(name, InferenceParser.ParseFile(file), target, shouldSucceed);
+      return this.Test(name, InferenceParser.ParseFile(file), target, shouldSucceed);
     }
 
-    private void Test(string name, KnowledgeBaseInference kb, string target, bool shouldSucceed)
+    private bool Test(string name, KnowledgeBaseInference kb, string target, bool shouldSucceed)
     {
+        this.InferenceTestCounter++;
       Console.Write("Test: " + name + " - ");
       var fakeKb = InferenceParser.ParseString(target);
       var targetState = new StateInference(fakeKb.Rules.First().Clause);
@@ -55,6 +67,7 @@ namespace ProjectAI.RouteFinding
 
       Console.Write(result.Succeeded == shouldSucceed ? "SUCCESS" : "FAILURE");
       Console.WriteLine((result.Succeeded ? " (solved " : " (not solved ") + result.Iterations + ")");
+      return result.Succeeded == shouldSucceed;
     }
 
     private void RunRoutefinding(String title, String filepath)

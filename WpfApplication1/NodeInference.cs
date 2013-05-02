@@ -36,10 +36,6 @@ namespace ProjectAI.RouteFinding
         public int CompareTo(object obj)
         {
             var other = obj as NodeInference;
-            //if (this.EstimatedTotalPathCost > other.EstimatedTotalPathCost)
-            //    return 1;
-            //if (this.EstimatedTotalPathCost < other.EstimatedTotalPathCost)
-            //    return -1;
 
             if (this.State.Clause.Count > other.State.Clause.Count)
                 return 1;
