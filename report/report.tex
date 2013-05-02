@@ -1,0 +1,48 @@
+\documentclass[danish]{article}
+
+\usepackage{fullpage} 
+\usepackage[latin1]{inputenc} 
+\usepackage[danish]{babel}
+\usepackage{listings} 
+%\usepackage{color} 
+\usepackage{xcolor}
+\usepackage{amssymb} 
+\usepackage{amsmath} 
+\usepackage{fancyhdr}
+\usepackage{lastpage} 
+%\usepackage{textcomp} 
+\usepackage{hyperref}
+\usepackage{parskip} 
+\usepackage{graphicx} 
+\usepackage{epstopdf}
+
+% setup c sharp syntax highlight 
+\lstdefinestyle{sharpc}{ language=[Sharp]C,
+frame=lr, rulecolor=\color{black}, basicstyle=\footnotesize\ttfamily,
+keywordstyle=\bfseries\color{green!40!black},
+commentstyle=\itshape\color{purple!40!black}, identifierstyle=\color{blue},
+stringstyle=\color{orange}}
+
+\lstset{ style=sharpc, numbers=left, escapeinside={\<*}{*>},
+breakatwhitespace=true }
+
+% code formatting helper 
+\newcommand{\code}[1]{\texttt{#1}}
+
+% no paragraph indention 
+\setlength{\parindent}{0pt}
+
+% setup page style 
+\pagestyle{fancy} 
+\fancyhf{} 
+\setlength{\headheight}{15pt}
+\setlength{\headsep}{25pt} 
+\lfoot{Side \thepage{} af \pageref{LastPage}}
+\rfoot{30/04-2013} \lhead{02105 - Algo 1} 
+\chead{Skattejagt} 
+\rhead{Simon Altschuler (s123563)}
+
+\begin{document}
+\section{Introduktion} 
+Hej 
+\end{document}
