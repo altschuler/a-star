@@ -17,35 +17,36 @@ namespace ProjectAI.RouteFinding
         {
             var state= new StateInference();
 
-            foreach (Literal literal in node.State.Clause)
+            foreach (var literal in node.State.Clause)
             {
-                foreach (Literal rule in action.Clause)
+                foreach (var rule in action.Clause)
                 {
                     if(literal.Name.Equals(rule.Name) && literal.Proposition != rule.Proposition)
                     {
 //Merger samtlige literals fra de to clauses
-                        state.Clause = node.State.Clause.Concat(action.Clause).ToList();
+                        state.Clause = new List<Literal>(node.State.Clause.Concat(action.Clause).ToList());
                         
 //Remove ONE positive
-                        for (int i = 0; i < state.Clause.Count; i++)
+                        for (var i = 0; i < state.Clause.Count; i++)
                         {
-                            Literal litz = state.Clause.ElementAt(i);
+                            var litz = state.Clause.ElementAt(i);
                             if (litz.Name.Equals(rule.Name) && litz.Proposition)
                             {
-                                state.Clause.RemoveAt(i);
+                                state.Clause.Remove(litz);
                                 break;
                             }
                         }
 //Remove ONE negation
-                        for (int i = 0; i < state.Clause.Count; i++)
+                        for (var i = 0; i < state.Clause.Count; i++)
                         {
-                            Literal litz = state.Clause.ElementAt(i);
+                            var litz = state.Clause.ElementAt(i);
                             if (litz.Name.Equals(rule.Name) && !litz.Proposition)
                             {
-                                state.Clause.RemoveAt(i);
+                                state.Clause.Remove(litz);
                                 break;
                             }
                         }
+
 //Removes duplicates such that "a OR a OR b" becomes "a OR b"
                         var ls = new List<Literal>();
                         foreach (var lit in state.Clause)
@@ -60,30 +61,22 @@ namespace ProjectAI.RouteFinding
                         }
                         state.Clause = ls;
 //                        state.SortState(); //Used for debugging
-                        return new NodeInference(node, node.Target, state, action);
+                        return new NodeInference(node, node.Target, state, new ActionInference(state, node.Target));
                     }
                 }
             }
 
 //Fjerner resten af modsatte literals..            
-            return new NodeInference(node, node.Target, state,action);
-
-
-            
-            throw new Exception("Failed resolution");
+            return new NodeInference(node, node.Target, state, new ActionInference(state, node.Target));
         }
 
 
 
         public List<StateInference> ActionsForNode(NodeInference node)
         {
-            List<StateInference> relevantRules = new List<StateInference>();
-            foreach (var state in this.Rules)
-            {
-                relevantRules.Add(state);
-            }
+            var relevantRules = this.Rules.ToList();
 
-            NodeInference parent = node.Parent;
+            var parent = node.Parent;
 //Må kun bruge regel fra KB én gang pr. søge-gren
 /*
             if (relevantRules.Contains(node.Action))
@@ -105,12 +98,11 @@ namespace ProjectAI.RouteFinding
             while (parent != null)
             {
                 relevantRules.Add(parent.State);
-
-                parent = parent.Parent; //lol, hvor meta
+                parent = parent.Parent; 
             }
 //Ovenstående er et forsøg på at anvende anscestor rigtigt.
 
-            List<StateInference> actions = new List<StateInference>();
+            var actions = new List<StateInference>();
             //foreach (var state in Rules)
             foreach (var state in relevantRules)
             {
@@ -127,8 +119,6 @@ namespace ProjectAI.RouteFinding
             }
 
             return actions;
-            //return Kb.Rules.Where(r => r.Clause.Any(l => l))).ToList();
-
         }
     }
 }

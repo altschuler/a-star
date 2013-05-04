@@ -1,25 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ProjectAI.RouteFinding
 {
-    public class ActionInference
+    public class ActionInference : ActionAbstract
     {
-        public StateRoutefinding EndState { get; set; }
-        protected double? _Cost;
-
-        public double Cost
+        public ActionInference(StateInference startState, StateInference endState) : base(startState, endState)
         {
-            get
-            {
-                if (this._Cost == null)
-                    this._Cost = 133712345;
+        }
 
-                return this._Cost.Value;
-            }
+        public override double Cost
+        {
+            // Cost is uniform
+            get { return 1; }
         }
 
         //public ActionInference(StateRoutefinding startState, StateRoutefinding endState) : base(startState, endState) { }

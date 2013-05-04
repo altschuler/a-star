@@ -7,7 +7,7 @@ namespace ProjectAI.RouteFinding
 {
     public static class AStarSearcherInference
     {
-        public static SearchResultInference Search(StateInference start, StateInference end, KnowledgeBaseInference kb)
+        public static SearchResult Search(StateInference start, StateInference end, KnowledgeBaseInference kb)
         {
             //Start_state er negeret "det man vil vise"
             //End_state er [], den tomme klausul
@@ -16,7 +16,7 @@ namespace ProjectAI.RouteFinding
             var explored = new List<StateInference>();
             var statesSearched = 0; //Bliver kun brugt af os af ren interesse
 
-            NodeInference firstNode = new NodeInference(start, end);
+            var firstNode = new NodeInference(start, end);
 
             //Console.WriteLine(String.Join("  ", firstNode.State.Clause.Select(l => (l.Proposition ? "" : "_") + l.Name + ",").ToList()));
 
@@ -25,29 +25,25 @@ namespace ProjectAI.RouteFinding
             while (frontier.Count > 0)
             {
                 // Chooses the lowest-cost node in the frontier
-                NodeInference currentNode = frontier.Pop();
-                
-                
+                var currentNode = frontier.Pop();
+
                 if (currentNode.State.Clause.Count == 0)
                 {
-                    NodeInference parent = currentNode.Parent;
-                    return new SearchResultInference(statesSearched, true);
+                    return new SearchResult(currentNode, statesSearched, true);
                 }
 
                 explored.Add(currentNode.State);
 
-                List<StateInference> actions = kb.ActionsForNode(currentNode);
-                
-                List<NodeInference> children = new List<NodeInference>();
-                //Apply resolution to get children
-                foreach (StateInference action in actions)
+                var actions = kb.ActionsForNode(currentNode);
+                var children = new List<NodeInference>();
+                //Apply resolution to children
+                foreach (var action in actions)
                 {
                     children.Add(kb.ApplyResolution(currentNode, action, explored));
                 }
 
-                foreach (NodeInference child in children)
+                foreach (var child in children)
                 {
-
                     statesSearched++;
                     if (!explored.Contains(child.State))
                     {
@@ -57,7 +53,7 @@ namespace ProjectAI.RouteFinding
                 }
             }
 
-	    return new SearchResultInference(statesSearched, false);
+            return new SearchResult(null, statesSearched, false);
         }
     }
 }

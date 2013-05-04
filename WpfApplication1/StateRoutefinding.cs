@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace ProjectAI.RouteFinding
 {
@@ -14,12 +11,19 @@ namespace ProjectAI.RouteFinding
         {
             this.X = x;
             this.Y = y;
-            this.AvailableActions = new List<ActionRoutefinding>();
+            this.AvailableActions = new List<ActionAbstract>();
         }
 
 	    public override string ToString()
 	    {
 	        return this.X + "," + this.Y;
 	    }
+
+        public override bool Equals(object obj)
+        {
+            var other = obj as StateRoutefinding;
+            return (other.X.Equals(this.X) && other.Y.Equals(this.Y));
+        }
+        
     }
 }

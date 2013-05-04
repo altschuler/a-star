@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace ProjectAI.RouteFinding
 {
     public abstract class StateAbstract
     {
-        public List<ActionRoutefinding> AvailableActions { get; set; }
+        public List<ActionAbstract> AvailableActions { get; set; }
     }
 }

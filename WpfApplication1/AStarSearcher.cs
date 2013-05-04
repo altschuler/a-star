@@ -1,41 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace ProjectAI.RouteFinding
 {
     static class AStarSearcher
     {
-        public static SearchResult Search(StateRoutefinding start, StateRoutefinding end, bool inferenceEngine)
+        public static SearchResult Search(StateRoutefinding start, StateRoutefinding end, KnowledgeBase kb)
         {
             //Start_state er negeret "det man vil vise"
             //End_state er [], den tomme klausul
-            var frontier = new PriorityQueue<NodeAbstract>();
+            var frontier = new PriorityQueue<NodeRoutefinding>();
             var explored = new List<StateAbstract>();
             var statesSearched = 0; //Bliver kun brugt af os af ren interesse
 
-            //frontier.Add(new T());
+            frontier.Add(new NodeRoutefinding(start, end));
 
             while (frontier.Count > 0)
             {
                 // Chooses the lowest-cost node in the frontier
-                NodeAbstract currentNode = frontier.Pop();
+                var currentNode = frontier.Pop();
                 if (currentNode.State.Equals(end))
                 {
-                    return new SearchResult(currentNode, statesSearched);
+                    return new SearchResult(currentNode, statesSearched, true);
                 }
 
                 explored.Add(currentNode.State);
 
-                //Get available Sctions to the State of the current Node
-                List<ActionRoutefinding> availableActions = currentNode.State.AvailableActions;
-                foreach (ActionRoutefinding action in availableActions/*.Where(a => a.StartState.Equals(currentNode.State))*/)
+                //Get available actions to the State of the current Node
+                var availableActions = kb.ActionsForNode(currentNode);
+                foreach (var action in availableActions)
                 {
-
-                    //var child = new T() { Action = action, Parent = currentNode, };
-                    var child = new NodeRoutefinding(null,null);
-                    //currentNode, action, en
+                    var child = new NodeRoutefinding(currentNode, action, action.EndState, end);
 
                     statesSearched++;
                     if (!explored.Contains(child.State))
@@ -81,7 +75,7 @@ namespace ProjectAI.RouteFinding
                  */
             }
 
-            return null;
+            return new SearchResult(null, statesSearched, true);
         }
     }
 }

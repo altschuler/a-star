@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ProjectAI.RouteFinding
 {
-    public class StateInference
+    public class StateInference : StateAbstract
     {
+        // TODO make use of AvailableAction
         public List<Literal> Clause { get; set; }
 
         public StateInference()
@@ -34,6 +32,11 @@ namespace ProjectAI.RouteFinding
                 return false;
 
             return this.Clause.All(l => other.Clause.Contains(l));
+        }
+
+        public override int GetHashCode()
+        {
+            return this.Clause.GetHashCode();
         }
     }
 }
