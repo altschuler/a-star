@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
 
-namespace ProjectAI.RouteFinding
+namespace Heureka
 {
     public static class Painter
     {

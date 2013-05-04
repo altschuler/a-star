@@ -1,4 +1,4 @@
-﻿namespace ProjectAI.RouteFinding
+﻿namespace Heureka
 {
     abstract public class ActionAbstract
     {

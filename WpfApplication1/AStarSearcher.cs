@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ProjectAI.RouteFinding
+namespace Heureka
 {
     static class AStarSearcher
     {
@@ -30,7 +30,6 @@ namespace ProjectAI.RouteFinding
                 foreach (var action in actions)
                 {
                     var child = kb.Resolve(currentNode, action, end, explored);
-                        //currentNode.CreateChild(currentNode, action, action.EndState, end, kb, explored);
 
                     statesSearched++;
                     if (!explored.Contains(child.State))

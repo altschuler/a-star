@@ -4,7 +4,7 @@ using System.Windows.Forms;
 using System.Drawing;
 using System.IO;
 
-namespace ProjectAI.RouteFinding
+namespace Heureka
 {
     public class MainWindow : Form
     {

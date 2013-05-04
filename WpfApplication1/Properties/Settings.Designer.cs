@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ProjectAI.RouteFinding.Properties {
+namespace Heureka.RouteFinding.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

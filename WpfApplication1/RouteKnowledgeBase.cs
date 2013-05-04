@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ProjectAI.RouteFinding
+namespace Heureka
 {
     public class RouteKnowledgeBase : IKnowledgeBase
     {

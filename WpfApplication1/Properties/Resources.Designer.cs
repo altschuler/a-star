@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ProjectAI.RouteFinding.Properties {
+namespace Heureka.RouteFinding.Properties {
     using System;
     
     

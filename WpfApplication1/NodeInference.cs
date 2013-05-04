@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ProjectAI.RouteFinding
+namespace Heureka
 {
     public class NodeInference : NodeAbstract
     {

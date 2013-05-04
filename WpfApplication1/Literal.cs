@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ProjectAI.RouteFinding
+namespace Heureka
 {
     public struct Literal
     {
