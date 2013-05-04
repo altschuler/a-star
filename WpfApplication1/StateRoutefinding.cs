@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace ProjectAI.RouteFinding
+﻿namespace ProjectAI.RouteFinding
 {
     public class StateRoutefinding : StateAbstract
     {
@@ -11,19 +9,18 @@ namespace ProjectAI.RouteFinding
         {
             this.X = x;
             this.Y = y;
-            this.AvailableActions = new List<ActionAbstract>();
         }
 
-	    public override string ToString()
-	    {
-	        return this.X + "," + this.Y;
-	    }
+        public override string ToString()
+        {
+            return this.X + "," + this.Y;
+        }
 
         public override bool Equals(object obj)
         {
             var other = obj as StateRoutefinding;
             return (other.X.Equals(this.X) && other.Y.Equals(this.Y));
         }
-        
+
     }
 }

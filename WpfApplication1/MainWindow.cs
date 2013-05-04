@@ -82,7 +82,6 @@ namespace ProjectAI.RouteFinding
             Console.Write("Searching...");
             var result = AStarSearcher.Search(new StateRoutefinding(0, 0), new StateRoutefinding(9, 5), kb);
             Console.WriteLine(result.Succeeded + " " + result.Iterations);
-            //Console.WriteLine(String.Format("{0} iterations to find target", this.Solution.Iterations));
         }
 
         private void OnPaint(object sender, PaintEventArgs args)

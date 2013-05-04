@@ -18,16 +18,16 @@ namespace ProjectAI.RouteFinding
             {
                 // Chooses the lowest-cost node in the frontier
                 var currentNode = frontier.Pop();
+
                 if (currentNode.State.Equals(end))
                 {
                     return new SearchResult(currentNode, statesSearched, true);
                 }
 
                 explored.Add(currentNode.State);
-
                 //Get available actions to the State of the current Node
-                var availableActions = kb.ActionsForNode(currentNode);
-                foreach (var action in availableActions)
+                var actions = kb.ActionsForNode(currentNode);
+                foreach (var action in actions)
                 {
                     var child = new NodeRoutefinding(currentNode, action, action.EndState, end);
 
@@ -49,33 +49,9 @@ namespace ProjectAI.RouteFinding
                         }
                     }
                 }
-                // Filter actions to the ones connected to the state of the current node
-                /*	    foreach (ActionRoutefinding action in actions.Where(a => a.StartState.Equals(currentNode.State)))
-                        {
-
-                            var child = new Node(currentNode, action, end);
-                            statesSearched++;
-                            if (!explored.Contains(child.State))
-                            {
-                            explored.Add(child.State);
-                            frontier.Add(child);
-                            }
-
-                            //Giver mening hvis man ser eksemplet i bogen s. 84. Måske den kun skal køres én gang når "end" er nået?
-                            for (int i = 0; i < frontier.Count; i++)
-                            {
-                                var frontierNode = frontier[i];
-                                if (frontierNode.State.Equals(child.State) && frontierNode.PathCost > child.PathCost)
-                                {
-                                    frontier[i] = child;
-                                    break;
-                                }
-                            }
-                        }
-                 */
             }
 
-            return new SearchResult(null, statesSearched, true);
+            return new SearchResult(null, statesSearched, false);
         }
     }
 }

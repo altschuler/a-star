@@ -4,13 +4,11 @@ namespace ProjectAI.RouteFinding
 {
     public class NodeRoutefinding : NodeAbstract
     {
-        public NodeRoutefinding(StateRoutefinding state, StateRoutefinding target) : this(null, null, state, target) {}
+        public NodeRoutefinding(StateRoutefinding state, StateRoutefinding target) : this(null, null, state, target) { }
 
         public NodeRoutefinding(NodeRoutefinding parent, ActionRoutefinding action, StateRoutefinding state, StateRoutefinding target)
-            : base(state, target)
+            : base(state, target, parent, action)
         {
-            this.Parent = parent;
-            this.Action = action;
             if (this.Parent != null && this.Action != null)
                 this.PathCost = this.Parent.PathCost + action.Cost;
 

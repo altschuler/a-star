@@ -8,14 +8,14 @@ namespace ProjectAI.RouteFinding
     {
         public List<ActionRoutefinding> Actions { get; set; }
         public List<StateRoutefinding> States { get; set; }
-        public int maxX { get; set; }
-        public int maxY { get; set; }
 
         public static KnowledgeBase Parse(string data)
         {
-            var kb = new KnowledgeBase();
-            kb.Actions = new List<ActionRoutefinding>();
-            kb.States = new List<StateRoutefinding>();
+            var kb = new KnowledgeBase
+                {
+                    Actions = new List<ActionRoutefinding>(),
+                    States = new List<StateRoutefinding>()
+                };
 
             var split = data.Split('\n');
             split = split.Select(s => s.Trim()).ToArray();
@@ -26,21 +26,6 @@ namespace ProjectAI.RouteFinding
 
                 var entrySplit = entry.Split(' ');
                 entrySplit = entrySplit.Select(s => s.Trim()).ToArray();
-                //if (entrySplit[0].Equals("start"))
-                //{
-                //    var spx = int.Parse(entrySplit[1]);
-                //    var spy = int.Parse(entrySplit[2]);
-                //    kb.Start = kb.GetOrCreateState(spx, spy);
-                //    continue;
-                //}
-
-                //if (entrySplit[0].Equals("end"))
-                //{
-                //    var epx = int.Parse(entrySplit[1]);
-                //    var epy = int.Parse(entrySplit[2]);
-                //    kb.End = kb.GetOrCreateState(epx, epy);
-                //    continue;
-                //}
 
                 var sx = int.Parse(entrySplit[0]);
                 var sy = int.Parse(entrySplit[1]);
@@ -54,12 +39,14 @@ namespace ProjectAI.RouteFinding
                 var endState = kb.GetOrCreateState(ex, ey);
 
                 var action = new ActionRoutefinding(actionName, startState, endState);
-                startState.AvailableActions.Add(action);
                 kb.Actions.Add(action);
             }
 
             return kb;
         }
+
+        public int MaxX { get { return this.States.Select(s => s.X).Max(); } }
+        public int MaxY { get { return this.States.Select(s => s.Y).Max(); } }
 
         protected StateRoutefinding GetOrCreateState(int px, int py)
         {
@@ -68,10 +55,6 @@ namespace ProjectAI.RouteFinding
             {
                 state = new StateRoutefinding(px, py);
                 this.States.Add(state);
-                if (px > this.maxX)
-                    this.maxX = px;
-                if (py > this.maxY)
-                    this.maxY = py;
             }
             return state;
         }

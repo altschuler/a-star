@@ -1,25 +1,16 @@
-﻿using System;
-
-namespace ProjectAI.RouteFinding
+﻿namespace ProjectAI.RouteFinding
 {
     public class NodeInference : NodeAbstract
     {
-        public double PathCost { get; protected set; }
-
-        public NodeInference(StateInference startState, StateInference targetState) :base(startState, targetState)
+        public NodeInference(StateInference startState, StateInference targetState)
+            : base(startState, targetState, null, null)
         {
-            this.State = startState;
-            this.Target = targetState;
             this.PathCost = 0;
-            this.Parent = null;
         }
 
-        public NodeInference(NodeInference parent, StateInference target, StateInference state, ActionInference action) : base(state, target)
+        public NodeInference(NodeInference parent, StateInference target, StateInference state, ActionInference action)
+            : base(state, target, parent, action)
         {
-            this.Parent = parent;
-            this.State = state;
-            this.Target = target;
-            this.Action = action;
             this.PathCost = this.Parent.PathCost + 1;
         }
 

@@ -15,18 +15,18 @@ namespace ProjectAI.RouteFinding
 
         public NodeInference ApplyResolution(NodeInference node, StateInference action, List<StateInference> explored)
         {
-            var state= new StateInference();
+            var state = new StateInference();
 
             foreach (var literal in node.State.Clause)
             {
                 foreach (var rule in action.Clause)
                 {
-                    if(literal.Name.Equals(rule.Name) && literal.Proposition != rule.Proposition)
+                    if (literal.Name.Equals(rule.Name) && literal.Proposition != rule.Proposition)
                     {
-//Merger samtlige literals fra de to clauses
+                        //Merger samtlige literals fra de to clauses
                         state.Clause = new List<Literal>(node.State.Clause.Concat(action.Clause).ToList());
-                        
-//Remove ONE positive
+
+                        //Remove ONE positive
                         for (var i = 0; i < state.Clause.Count; i++)
                         {
                             var litz = state.Clause.ElementAt(i);
@@ -36,7 +36,7 @@ namespace ProjectAI.RouteFinding
                                 break;
                             }
                         }
-//Remove ONE negation
+                        //Remove ONE negation
                         for (var i = 0; i < state.Clause.Count; i++)
                         {
                             var litz = state.Clause.ElementAt(i);
@@ -47,7 +47,7 @@ namespace ProjectAI.RouteFinding
                             }
                         }
 
-//Removes duplicates such that "a OR a OR b" becomes "a OR b"
+                        //Removes duplicates such that "a OR a OR b" becomes "a OR b"
                         var ls = new List<Literal>();
                         foreach (var lit in state.Clause)
                         {
@@ -60,13 +60,13 @@ namespace ProjectAI.RouteFinding
                             if (!found) ls.Add(lit);
                         }
                         state.Clause = ls;
-//                        state.SortState(); //Used for debugging
+                        //                        state.SortState(); //Used for debugging
                         return new NodeInference(node, node.Target, state, new ActionInference(state, node.Target));
                     }
                 }
             }
 
-//Fjerner resten af modsatte literals..            
+            //Fjerner resten af modsatte literals..            
             return new NodeInference(node, node.Target, state, new ActionInference(state, node.Target));
         }
 
@@ -77,30 +77,30 @@ namespace ProjectAI.RouteFinding
             var relevantRules = this.Rules.ToList();
 
             var parent = node.Parent;
-//Må kun bruge regel fra KB én gang pr. søge-gren
-/*
-            if (relevantRules.Contains(node.Action))
-            {
-                //Console.WriteLine("removeing "+String.Join("  ", node.Action.Clause.Select(l => (l.Proposition ? "" : "_") + l.Name + ",").ToList()));
-                relevantRules.Remove(node.Action);
-            }
+            //Må kun bruge regel fra KB én gang pr. søge-gren
+            /*
+                        if (relevantRules.Contains(node.Action))
+                        {
+                            //Console.WriteLine("removeing "+String.Join("  ", node.Action.Clause.Select(l => (l.Proposition ? "" : "_") + l.Name + ",").ToList()));
+                            relevantRules.Remove(node.Action);
+                        }
 
-            while (parent != null)
-            {
+                        while (parent != null)
+                        {
 
-                if (relevantRules.Contains(parent.Action))
-                    relevantRules.Remove(parent.Action);
+                            if (relevantRules.Contains(parent.Action))
+                                relevantRules.Remove(parent.Action);
 
-                parent = parent.Parent; //lol, hvor meta
-            }
-            */
+                            parent = parent.Parent; //lol, hvor meta
+                        }
+                        */
             parent = node.Parent;
             while (parent != null)
             {
                 relevantRules.Add(parent.State);
-                parent = parent.Parent; 
+                parent = parent.Parent;
             }
-//Ovenstående er et forsøg på at anvende anscestor rigtigt.
+            //Ovenstående er et forsøg på at anvende anscestor rigtigt.
 
             var actions = new List<StateInference>();
             //foreach (var state in Rules)

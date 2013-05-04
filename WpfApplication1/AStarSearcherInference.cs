@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace ProjectAI.RouteFinding
 {
@@ -11,23 +8,18 @@ namespace ProjectAI.RouteFinding
         {
             //Start_state er negeret "det man vil vise"
             //End_state er [], den tomme klausul
-
             var frontier = new PriorityQueue<NodeInference>();
             var explored = new List<StateInference>();
             var statesSearched = 0; //Bliver kun brugt af os af ren interesse
 
-            var firstNode = new NodeInference(start, end);
-
-            //Console.WriteLine(String.Join("  ", firstNode.State.Clause.Select(l => (l.Proposition ? "" : "_") + l.Name + ",").ToList()));
-
-            frontier.Add(firstNode);
+            frontier.Add(new NodeInference(start, end));
 
             while (frontier.Count > 0)
             {
                 // Chooses the lowest-cost node in the frontier
                 var currentNode = frontier.Pop();
 
-                if (currentNode.State.Clause.Count == 0)
+                if (currentNode.State.Equals(end))
                 {
                     return new SearchResult(currentNode, statesSearched, true);
                 }
@@ -35,20 +27,26 @@ namespace ProjectAI.RouteFinding
                 explored.Add(currentNode.State);
 
                 var actions = kb.ActionsForNode(currentNode);
-                var children = new List<NodeInference>();
-                //Apply resolution to children
                 foreach (var action in actions)
                 {
-                    children.Add(kb.ApplyResolution(currentNode, action, explored));
-                }
+                    var child = kb.ApplyResolution(currentNode, action, explored);
 
-                foreach (var child in children)
-                {
                     statesSearched++;
                     if (!explored.Contains(child.State))
                     {
                         explored.Add(child.State);
                         frontier.Add(child);
+                    }
+
+                    //Giver mening hvis man ser eksemplet i bogen s. 84. Måske den kun skal køres én gang når "end" er nået?
+                    for (int i = 0; i < frontier.Count; i++)
+                    {
+                        var frontierNode = frontier[i];
+                        if (frontierNode.State.Equals(child.State) && frontierNode.PathCost > child.PathCost)
+                        {
+                            frontier[i] = child;
+                            break;
+                        }
                     }
                 }
             }

@@ -9,7 +9,7 @@ namespace ProjectAI.RouteFinding
         public static void DrawKnowledgeBase(Graphics gfx, NodeRoutefinding traceNode, KnowledgeBase kb, StateRoutefinding startState, StateRoutefinding endState)
         {
             var offset = 10;
-            var scale = Math.Max(kb.maxX, kb.maxY);
+            var scale = Math.Max(kb.MaxX, kb.MaxY);
             scale = 400 / scale;
 
             // Draw map of routes

@@ -20,14 +20,10 @@ namespace ProjectAI.RouteFinding
 
         public override int GetHashCode()
         {
-            // From StackOverflow
-            unchecked
-            {
-                var hash = 17;
-                hash = hash * 23 + this.Name.GetHashCode();
-                hash = hash * 23 + this.Proposition.GetHashCode();
-                return hash;
-            }
+            var hash = 17;
+            hash = hash * 23 + this.Name.GetHashCode();
+            hash = hash * 23 + this.Proposition.GetHashCode();
+            return hash;
         }
     }
 

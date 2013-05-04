@@ -12,10 +12,12 @@ namespace ProjectAI.RouteFinding
         public double EstimatedTotalPathCost { get; protected set; }
         public double PathCost { get; protected set; }
 
-        protected NodeAbstract(StateAbstract state, StateAbstract target)
+        protected NodeAbstract(StateAbstract state, StateAbstract target, NodeAbstract Parent, ActionAbstract action)
         {
             this.State = state;
             this.Target = target;
+            this.Parent = Parent;
+            this.Action = action;
         }
 
         public abstract int CompareTo(object obj);
