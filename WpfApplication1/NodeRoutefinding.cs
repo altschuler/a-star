@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ProjectAI.RouteFinding
 {
@@ -37,6 +38,5 @@ namespace ProjectAI.RouteFinding
             get { return base.Parent as NodeRoutefinding; }
             set { base.Parent = value; }
         }
-
     }
 }

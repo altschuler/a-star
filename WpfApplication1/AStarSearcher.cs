@@ -4,16 +4,16 @@ namespace ProjectAI.RouteFinding
 {
     static class AStarSearcher
     {
-        public static SearchResult Search(StateRoutefinding start, StateRoutefinding end, KnowledgeBase kb)
+        public static SearchResult Search(StateAbstract end, NodeAbstract initialNode, IKnowledgeBase kb)
         {
             //Start_state er negeret "det man vil vise"
             //End_state er [], den tomme klausul
-            var frontier = new PriorityQueue<NodeRoutefinding>();
+            var frontier = new PriorityQueue<NodeAbstract>();
             var explored = new List<StateAbstract>();
             var statesSearched = 0; //Bliver kun brugt af os af ren interesse
 
-            frontier.Add(new NodeRoutefinding(start, end));
-
+            frontier.Add(initialNode);
+            
             while (frontier.Count > 0)
             {
                 // Chooses the lowest-cost node in the frontier
@@ -29,7 +29,8 @@ namespace ProjectAI.RouteFinding
                 var actions = kb.ActionsForNode(currentNode);
                 foreach (var action in actions)
                 {
-                    var child = new NodeRoutefinding(currentNode, action, action.EndState, end);
+                    var child = kb.Resolve(currentNode, action, end, explored);
+                        //currentNode.CreateChild(currentNode, action, action.EndState, end, kb, explored);
 
                     statesSearched++;
                     if (!explored.Contains(child.State))

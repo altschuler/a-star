@@ -1,4 +1,6 @@
-﻿namespace ProjectAI.RouteFinding
+﻿using System.Collections.Generic;
+
+namespace ProjectAI.RouteFinding
 {
     public class NodeInference : NodeAbstract
     {

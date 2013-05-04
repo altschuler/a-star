@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace ProjectAI.RouteFinding
 {
-    public class KnowledgeBaseInference
+    public class KnowledgeBaseInference : IKnowledgeBase
     {
         public List<StateInference> Rules { get; set; }
 
@@ -13,9 +13,10 @@ namespace ProjectAI.RouteFinding
             this.Rules = new List<StateInference>();
         }
 
-        public NodeInference ApplyResolution(NodeInference node, StateInference action, List<StateInference> explored)
+        public NodeInference ApplyResolution(NodeInference node, ActionAbstract act, IEnumerable<StateAbstract> explored)
         {
             var state = new StateInference();
+            var action = act.StartState as StateInference;
 
             foreach (var literal in node.State.Clause)
             {
@@ -70,11 +71,9 @@ namespace ProjectAI.RouteFinding
             return new NodeInference(node, node.Target, state, new ActionInference(state, node.Target));
         }
 
-
-
-        public List<StateInference> ActionsForNode(NodeInference node)
+        public IEnumerable<ActionAbstract> ActionsForNode(NodeAbstract node)
         {
-            var relevantRules = this.Rules.ToList();
+            List<StateInference> relevantRules = this.Rules.ToList();
 
             var parent = node.Parent;
             //Må kun bruge regel fra KB én gang pr. søge-gren
@@ -97,28 +96,33 @@ namespace ProjectAI.RouteFinding
             parent = node.Parent;
             while (parent != null)
             {
-                relevantRules.Add(parent.State);
+                relevantRules.Add(parent.State as StateInference);
                 parent = parent.Parent;
             }
             //Ovenstående er et forsøg på at anvende anscestor rigtigt.
 
-            var actions = new List<StateInference>();
+            var actions = new List<ActionAbstract>();
             //foreach (var state in Rules)
             foreach (var state in relevantRules)
             {
                 foreach (var literal in state.Clause)
                 {
-                    foreach (var innerLiterat in node.State.Clause)
+                    foreach (var innerLiterat in ((StateInference)node.State).Clause)
                     {
                         if (innerLiterat.Name.Equals(literal.Name) && innerLiterat.Proposition != literal.Proposition)
                         {
-                            actions.Add(state);
+                            actions.Add(new ActionInference(state, node.Target as StateInference));
                         }
                     }
                 }
             }
 
             return actions;
+        }
+
+        public NodeAbstract Resolve(NodeAbstract node, ActionAbstract action, StateAbstract targetState, IEnumerable<StateAbstract> explored)
+        {
+            return this.ApplyResolution(node as NodeInference, action, explored);
         }
     }
 }

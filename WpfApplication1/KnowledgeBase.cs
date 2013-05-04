@@ -4,17 +4,17 @@ using System.Linq;
 
 namespace ProjectAI.RouteFinding
 {
-    public class KnowledgeBase
+    public class KnowledgeBase : IKnowledgeBase
     {
-        public List<ActionRoutefinding> Actions { get; set; }
-        public List<StateRoutefinding> States { get; set; }
+        public List<ActionAbstract> Actions { get; set; }
+        public List<StateAbstract> States { get; set; }
 
         public static KnowledgeBase Parse(string data)
         {
             var kb = new KnowledgeBase
                 {
-                    Actions = new List<ActionRoutefinding>(),
-                    States = new List<StateRoutefinding>()
+                    Actions = new List<ActionAbstract>(),
+                    States = new List<StateAbstract>()
                 };
 
             var split = data.Split('\n');
@@ -45,23 +45,36 @@ namespace ProjectAI.RouteFinding
             return kb;
         }
 
-        public int MaxX { get { return this.States.Select(s => s.X).Max(); } }
-        public int MaxY { get { return this.States.Select(s => s.Y).Max(); } }
+        public int MaxX { get { return this.States.Select(s => ((StateRoutefinding)s).X).Max(); } }
+        public int MaxY { get { return this.States.Select(s => ((StateRoutefinding)s).Y).Max(); } }
 
         protected StateRoutefinding GetOrCreateState(int px, int py)
         {
-            var state = this.States.SingleOrDefault(s => s.X == px && s.Y == py);
+            var tmpState = new StateRoutefinding(px, py);
+            var state = this.States.SingleOrDefault(s => s.Equals(tmpState));
             if (state == null)
             {
                 state = new StateRoutefinding(px, py);
                 this.States.Add(state);
             }
-            return state;
+            return (StateRoutefinding)state;
         }
 
-        public List<ActionRoutefinding> ActionsForNode(NodeAbstract node)
+        public IEnumerable<ActionAbstract> ActionsForNode(NodeAbstract node)
         {
             return this.Actions.Where(a => a.StartState.Equals(node.State)).ToList();
         }
+
+        public NodeAbstract Resolve(NodeAbstract node, ActionAbstract action, StateAbstract targetState, IEnumerable<StateAbstract> explored)
+        {
+            return new NodeRoutefinding(node as NodeRoutefinding, action as ActionRoutefinding, action.EndState as StateRoutefinding, targetState as StateRoutefinding);
+        }
+    }
+
+    public interface IKnowledgeBase
+    {
+        IEnumerable<ActionAbstract> ActionsForNode(NodeAbstract node);
+
+        NodeAbstract Resolve(NodeAbstract node, ActionAbstract action, StateAbstract targetState, IEnumerable<StateAbstract> explored);
     }
 }

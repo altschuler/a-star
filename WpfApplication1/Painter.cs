@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Linq;
 
 namespace ProjectAI.RouteFinding
 {
@@ -16,7 +17,7 @@ namespace ProjectAI.RouteFinding
             var pen = new Pen(Color.FromArgb(100, 1, 1, 0)) { Width = 5 };
             pen.EndCap = LineCap.ArrowAnchor;
             pen.StartCap = LineCap.RoundAnchor;
-            foreach (var action in kb.Actions)
+            foreach (var action in kb.Actions.Select(a => (ActionRoutefinding)a))
                 gfx.DrawLine(pen, action.StartState.X * scale + offset, action.StartState.Y * scale + offset,
                       action.EndState.X * scale + offset, action.EndState.Y * scale + offset);
 

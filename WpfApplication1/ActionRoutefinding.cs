@@ -16,10 +16,7 @@ namespace ProjectAI.RouteFinding
         {
             get
             {
-                if (this._Cost == null)
-                    this._Cost = Math.Sqrt(Math.Pow(this.EndState.X - this.StartState.X, 2) + Math.Pow(this.EndState.Y - this.StartState.Y, 2));
-
-                return this._Cost.Value;
+                return Math.Sqrt(Math.Pow(this.EndState.X - this.StartState.X, 2) + Math.Pow(this.EndState.Y - this.StartState.Y, 2));
             }
         }
 
