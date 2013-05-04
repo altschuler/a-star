@@ -4,17 +4,17 @@
 \usepackage[latin1]{inputenc} 
 \usepackage[danish]{babel}
 \usepackage{listings} 
-%\usepackage{color} 
 \usepackage{xcolor}
 \usepackage{amssymb} 
 \usepackage{amsmath} 
 \usepackage{fancyhdr}
 \usepackage{lastpage} 
-%\usepackage{textcomp} 
 \usepackage{hyperref}
 \usepackage{parskip} 
 \usepackage{graphicx} 
 \usepackage{epstopdf}
+\usepackage{abstract}
+
 
 % setup c sharp syntax highlight 
 \lstdefinestyle{sharpc}{ language=[Sharp]C,
@@ -38,11 +38,44 @@ breakatwhitespace=true }
 \setlength{\headheight}{15pt}
 \setlength{\headsep}{25pt} 
 \lfoot{Side \thepage{} af \pageref{LastPage}}
-\rfoot{30/04-2013} \lhead{02105 - Algo 1} 
-\chead{Skattejagt} 
-\rhead{Simon Altschuler (s123563)}
+\rfoot{07/05-2013} \lhead{02180 Intro to A.I.} 
+\chead{Heureka} 
+\rhead{}
+
+\author{
+  Patrick Gadd\\
+  \texttt{s113491}
+  \and
+  Simon Altschuler\\
+  \texttt{s123563}
+}
+\title{Heureka projekt}
+\date{07/05-2013}
 
 \begin{document}
-\section{Introduktion} 
-Hej 
+\maketitle
+
+\textbf{Abstract} \\ 
+I denne opgave undersøger vi teori og implementation af heuristiske søge metoder. Vi benytter \code{A*} søgning til både at finde vej gennem et bykort og til at udlede logiske slutninger.
+
+\clearpage
+
+\section*{Introduktion} 
+Til projektet har vi brugt \code{C\#} til implementation af programmet. 
+
+\section*{Datastrukturer}
+Klausuler som struct med Navn + Proposition
+Vi burde bruge HashSet (virker ikke?!)
+KB er en liste af klausuler
+State har klausuler
+Node har state
+Prioritetskø som frontier
+
+\section*{Kørsel af programmet}
+Parser .kb filer til en KB
+Search tager kb og Target state (tom klausul for inference, state for routefinding)
+
+\section*{Konklusion} 
+
+
 \end{document}
