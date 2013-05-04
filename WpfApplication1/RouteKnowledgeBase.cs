@@ -65,7 +65,7 @@ namespace Heureka
 
         public NodeAbstract Resolve(NodeAbstract node, ActionAbstract action, StateAbstract targetState, IEnumerable<StateAbstract> explored)
         {
-            return new NodeRoutefinding(node as NodeRoutefinding, action as ActionRoutefinding, action.EndState as StateRoutefinding, targetState as StateRoutefinding);
+            return new NodeRoutefinding(node, action, action.EndState as StateRoutefinding, targetState as StateRoutefinding);
         }
     }
 

@@ -6,7 +6,7 @@ namespace Heureka
     {
         public String Name { get; set; }
 
-        public ActionRoutefinding(String name, StateRoutefinding startState, StateRoutefinding endState)
+        public ActionRoutefinding(String name, StateAbstract startState, StateAbstract endState)
             : base(startState, endState)
         {
             this.Name = name;

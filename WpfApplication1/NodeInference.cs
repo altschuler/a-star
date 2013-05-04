@@ -4,13 +4,13 @@ namespace Heureka
 {
     public class NodeInference : NodeAbstract
     {
-        public NodeInference(StateInference startState, StateInference targetState)
+        public NodeInference(StateAbstract startState, StateAbstract targetState)
             : base(startState, targetState, null, null)
         {
             this.PathCost = 0;
         }
 
-        public NodeInference(NodeInference parent, StateInference target, StateInference state, ActionInference action)
+        public NodeInference(NodeAbstract parent, StateAbstract target, StateAbstract state, ActionAbstract action)
             : base(state, target, parent, action)
         {
             this.PathCost = this.Parent.PathCost + 1;

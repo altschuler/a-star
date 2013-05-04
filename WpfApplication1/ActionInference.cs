@@ -2,7 +2,7 @@
 {
     public class ActionInference : ActionAbstract
     {
-        public ActionInference(StateInference startState, StateInference endState)
+        public ActionInference(StateAbstract startState, StateAbstract endState)
             : base(startState, endState)
         {
         }

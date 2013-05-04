@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Heureka
 {
@@ -7,7 +6,7 @@ namespace Heureka
     {
         public NodeRoutefinding(StateRoutefinding state, StateRoutefinding target) : this(null, null, state, target) { }
 
-        public NodeRoutefinding(NodeRoutefinding parent, ActionRoutefinding action, StateRoutefinding state, StateRoutefinding target)
+        public NodeRoutefinding(NodeAbstract parent, ActionAbstract action, StateRoutefinding state, StateRoutefinding target)
             : base(state, target, parent, action)
         {
             if (this.Parent != null && this.Action != null)
