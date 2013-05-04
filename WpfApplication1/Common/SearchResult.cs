@@ -1,4 +1,4 @@
-namespace Heureka
+namespace Heureka.Common
 {
     public class SearchResult
     {

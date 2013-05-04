@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Heureka
+namespace Heureka.Common
 {
     public abstract class NodeAbstract : IComparable
     {

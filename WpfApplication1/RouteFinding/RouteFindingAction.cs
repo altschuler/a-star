@@ -1,12 +1,13 @@
 ﻿using System;
+using Heureka.Common;
 
-namespace Heureka
+namespace Heureka.RouteFinding
 {
-    public class ActionRoutefinding : ActionAbstract
+    public class RouteFindingAction : ActionAbstract
     {
         public String Name { get; set; }
 
-        public ActionRoutefinding(String name, StateAbstract startState, StateAbstract endState)
+        public RouteFindingAction(String name, StateAbstract startState, StateAbstract endState)
             : base(startState, endState)
         {
             this.Name = name;
@@ -20,14 +21,14 @@ namespace Heureka
             }
         }
 
-        new public StateRoutefinding StartState
+        new public RouteFindingState StartState
         {
-            get { return base.StartState as StateRoutefinding; }
+            get { return base.StartState as RouteFindingState; }
         }
 
-        new public StateRoutefinding EndState
+        new public RouteFindingState EndState
         {
-            get { return base.EndState as StateRoutefinding; }
+            get { return base.EndState as RouteFindingState; }
         }
     }
 }

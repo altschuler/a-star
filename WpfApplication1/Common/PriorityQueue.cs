@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Heureka
+namespace Heureka.Common
 {
     public class PriorityQueue<T> : List<T> where T : IComparable
     {

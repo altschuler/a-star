@@ -1,22 +1,23 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Heureka.Common;
 
-namespace Heureka
+namespace Heureka.Inference
 {
     public class InferenceKnowledgeBase : IKnowledgeBase
     {
-        public List<StateInference> Rules { get; set; }
+        public List<InferenceState> Rules { get; set; }
 
         public InferenceKnowledgeBase()
         {
-            this.Rules = new List<StateInference>();
+            this.Rules = new List<InferenceState>();
         }
 
-        public NodeInference ApplyResolution(NodeInference node, ActionAbstract act, IEnumerable<StateAbstract> explored)
+        public InferenceNode ApplyResolution(InferenceNode node, ActionAbstract act, IEnumerable<StateAbstract> explored)
         {
-            var state = new StateInference();
-            var action = act.StartState as StateInference;
+            var state = new InferenceState();
+            var action = act.StartState as InferenceState;
 
             foreach (var literal in node.State.Clause)
             {
@@ -24,26 +25,24 @@ namespace Heureka
                 {
                     if (literal.Name.Equals(rule.Name) && literal.Proposition != rule.Proposition)
                     {
-                        //Merger samtlige literals fra de to clauses
-                        state.Clause = new List<Literal>(node.State.Clause.Concat(action.Clause).ToList());
+                        // Merger samtlige literals fra de to clauses
+                        state.Clause = node.State.Clause.Concat(action.Clause).ToList();
 
-                        //Remove ONE positive
-                        for (var i = 0; i < state.Clause.Count; i++)
+                        // Remove ONE positive
+                        foreach (var lit in state.Clause)
                         {
-                            var litz = state.Clause.ElementAt(i);
-                            if (litz.Name.Equals(rule.Name) && litz.Proposition)
+                            if (lit.Name.Equals(rule.Name) && lit.Proposition)
                             {
-                                state.Clause.Remove(litz);
+                                state.Clause.Remove(lit);
                                 break;
                             }
                         }
-                        //Remove ONE negation
-                        for (var i = 0; i < state.Clause.Count; i++)
+                        // Remove ONE negation
+                        foreach (var lit in state.Clause)
                         {
-                            var litz = state.Clause.ElementAt(i);
-                            if (litz.Name.Equals(rule.Name) && !litz.Proposition)
+                            if (lit.Name.Equals(rule.Name) && !lit.Proposition)
                             {
-                                state.Clause.Remove(litz);
+                                state.Clause.Remove(lit);
                                 break;
                             }
                         }
@@ -56,14 +55,13 @@ namespace Heureka
                                 ls.Add(lit);
                         }
                         state.Clause = ls;
-                        //                        state.SortState(); //Used for debugging
-                        return new NodeInference(node, node.Target, state, new ActionInference(state, node.Target));
+                        return new InferenceNode(node, node.Target, state, new InferenceAction(state, node.Target));
                     }
                 }
             }
 
             //Fjerner resten af modsatte literals..            
-            return new NodeInference(node, node.Target, state, new ActionInference(state, node.Target));
+            return new InferenceNode(node, node.Target, state, new InferenceAction(state, node.Target));
         }
 
         public IEnumerable<ActionAbstract> ActionsForNode(NodeAbstract node)
@@ -73,10 +71,10 @@ namespace Heureka
             var parent = node.Parent;
             //Må kun bruge regel fra KB én gang pr. søge-gren
             /*
-                        if (relevantRules.Contains(node.Action))
+                        if (relevantRules.Contains(inferenceNode.Action))
                         {
-                            //Console.WriteLine("removeing "+String.Join("  ", node.Action.Clause.Select(l => (l.Proposition ? "" : "_") + l.Name + ",").ToList()));
-                            relevantRules.Remove(node.Action);
+                            //Console.WriteLine("removeing "+String.Join("  ", inferenceNode.Action.Clause.Select(l => (l.Proposition ? "" : "_") + l.Name + ",").ToList()));
+                            relevantRules.Remove(inferenceNode.Action);
                         }
 
                         while (parent != null)
@@ -91,7 +89,7 @@ namespace Heureka
             parent = node.Parent;
             while (parent != null)
             {
-                relevantRules.Add(parent.State as StateInference);
+                relevantRules.Add(parent.State as InferenceState);
                 parent = parent.Parent;
             }
             //Ovenstående er et forsøg på at anvende anscestor rigtigt.
@@ -102,11 +100,11 @@ namespace Heureka
             {
                 foreach (var literal in state.Clause)
                 {
-                    foreach (var innerLiterat in ((StateInference)node.State).Clause)
+                    foreach (var innerLiterat in ((InferenceState)node.State).Clause)
                     {
                         if (innerLiterat.Name.Equals(literal.Name) && innerLiterat.Proposition != literal.Proposition)
                         {
-                            actions.Add(new ActionInference(state, node.Target as StateInference));
+                            actions.Add(new InferenceAction(state, node.Target as InferenceState));
                         }
                     }
                 }
@@ -117,7 +115,7 @@ namespace Heureka
 
         public NodeAbstract Resolve(NodeAbstract node, ActionAbstract action, StateAbstract targetState, IEnumerable<StateAbstract> explored)
         {
-            return this.ApplyResolution(node as NodeInference, action, explored);
+            return this.ApplyResolution(node as InferenceNode, action, explored);
         }
 
         public static InferenceKnowledgeBase Parse(string[] lines)
@@ -125,8 +123,8 @@ namespace Heureka
             var kb = new InferenceKnowledgeBase();
             foreach (var line in lines)
             {
-                var rule = new StateInference();
-                foreach (string lit in line.Split(' '))
+                var rule = new InferenceState();
+                foreach (var lit in line.Split(' '))
                 {
                     var isNegated = lit.StartsWith("-");
                     rule.Clause.Add(new Literal(isNegated ? lit.Substring(1) : lit, !isNegated));

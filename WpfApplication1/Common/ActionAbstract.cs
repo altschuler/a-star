@@ -1,4 +1,4 @@
-﻿namespace Heureka
+﻿namespace Heureka.Common
 {
     abstract public class ActionAbstract
     {
