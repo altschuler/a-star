@@ -1,14 +1,15 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace ProjectAI.RouteFinding
 {
-    public class KnowledgeBaseInference : IKnowledgeBase
+    public class InferenceKnowledgeBase : IKnowledgeBase
     {
         public List<StateInference> Rules { get; set; }
 
-        public KnowledgeBaseInference()
+        public InferenceKnowledgeBase()
         {
             this.Rules = new List<StateInference>();
         }
@@ -118,6 +119,32 @@ namespace ProjectAI.RouteFinding
         public NodeAbstract Resolve(NodeAbstract node, ActionAbstract action, StateAbstract targetState, IEnumerable<StateAbstract> explored)
         {
             return this.ApplyResolution(node as NodeInference, action, explored);
+        }
+
+        public static InferenceKnowledgeBase Parse(string[] lines)
+        {
+            var kb = new InferenceKnowledgeBase();
+            foreach (var line in lines)
+            {
+                var rule = new StateInference();
+                foreach (string lit in line.Split(' '))
+                {
+                    var isNegated = lit.StartsWith("-");
+                    rule.Clause.Add(new Literal(isNegated ? lit.Substring(1) : lit, !isNegated));
+                }
+                kb.Rules.Add(rule);
+            }
+            return kb;
+        }
+
+        public static InferenceKnowledgeBase ParseFile(string file)
+        {
+            return Parse(File.ReadAllLines(file));
+        }
+
+        public static InferenceKnowledgeBase ParseString(string str)
+        {
+            return Parse(str.Split('\n'));
         }
     }
 }

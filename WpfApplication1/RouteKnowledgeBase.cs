@@ -4,14 +4,14 @@ using System.Linq;
 
 namespace ProjectAI.RouteFinding
 {
-    public class KnowledgeBase : IKnowledgeBase
+    public class RouteKnowledgeBase : IKnowledgeBase
     {
         public List<ActionAbstract> Actions { get; set; }
         public List<StateAbstract> States { get; set; }
 
-        public static KnowledgeBase Parse(string data)
+        public static RouteKnowledgeBase Parse(string data)
         {
-            var kb = new KnowledgeBase
+            var kb = new RouteKnowledgeBase
                 {
                     Actions = new List<ActionAbstract>(),
                     States = new List<StateAbstract>()

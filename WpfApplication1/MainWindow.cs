@@ -10,7 +10,7 @@ namespace ProjectAI.RouteFinding
     {
         private int InferenceTestCounter;
         private SearchResult RouteSearchResult;
-        private KnowledgeBase RouteKB;
+        private RouteKnowledgeBase RouteKB;
 
         static public void Main()
         {
@@ -48,19 +48,19 @@ namespace ProjectAI.RouteFinding
 
         private bool TestString(string name, string str, string target, bool shouldSucceed)
         {
-            return this.Test(name, InferenceParser.ParseString(str), target, shouldSucceed);
+            return this.Test(name, InferenceKnowledgeBase.ParseString(str), target, shouldSucceed);
         }
 
         private bool TestFile(string name, string file, string target, bool shouldSucceed)
         {
-            return this.Test(name, InferenceParser.ParseFile(file), target, shouldSucceed);
+            return this.Test(name, InferenceKnowledgeBase.ParseFile(file), target, shouldSucceed);
         }
 
-        private bool Test(string name, KnowledgeBaseInference kb, string target, bool shouldSucceed)
+        private bool Test(string name, IKnowledgeBase kb, string target, bool shouldSucceed)
         {
             this.InferenceTestCounter++;
             Console.Write("Test: " + name + " - ");
-            var parsedTarget = InferenceParser.ParseString(target).Rules.First();
+            var parsedTarget = InferenceKnowledgeBase.ParseString(target).Rules.First();
             var targetState = new StateInference(parsedTarget.Clause);
             var result = AStarSearcher.Search(new StateInference(), new NodeInference(targetState, new StateInference()), kb);
 
@@ -77,7 +77,7 @@ namespace ProjectAI.RouteFinding
             this.Paint += this.OnPaint;
 
             // Load and parse knowledge base
-            var kb = KnowledgeBase.Parse(File.ReadAllText(filepath));
+            var kb = RouteKnowledgeBase.Parse(File.ReadAllText(filepath));
 
             // Calculate route
             Console.Write("Searching...");
