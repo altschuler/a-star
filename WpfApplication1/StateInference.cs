@@ -5,7 +5,6 @@ namespace ProjectAI.RouteFinding
 {
     public class StateInference : StateAbstract
     {
-        // TODO make use of AvailableAction
         public List<Literal> Clause { get; set; }
 
         public StateInference() : this(new List<Literal>()) { }

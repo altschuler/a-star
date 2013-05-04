@@ -52,13 +52,8 @@ namespace ProjectAI.RouteFinding
                         var ls = new List<Literal>();
                         foreach (var lit in state.Clause)
                         {
-                            var found = false;
-                            foreach (var litInner in ls)
-                            {
-                                if (litInner.Equals(lit))
-                                    found = true;
-                            }
-                            if (!found) ls.Add(lit);
+                            if (!ls.Contains(lit)) 
+                                ls.Add(lit);
                         }
                         state.Clause = ls;
                         //                        state.SortState(); //Used for debugging
@@ -73,7 +68,7 @@ namespace ProjectAI.RouteFinding
 
         public IEnumerable<ActionAbstract> ActionsForNode(NodeAbstract node)
         {
-            List<StateInference> relevantRules = this.Rules.ToList();
+            var relevantRules = this.Rules.ToList();
 
             var parent = node.Parent;
             //Må kun bruge regel fra KB én gang pr. søge-gren

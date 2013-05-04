@@ -40,7 +40,7 @@ namespace ProjectAI.RouteFinding
             if (this.TestFile("No steam (boiler off)", "inference_kbs/steam_boiler_off.kb", "steam", true)) succesCounter++;
             if (this.TestFile("No steam (boiler broken)", "inference_kbs/steam_boiler_broken.kb", "steam", true)) succesCounter++;
             if (this.TestFile("Espresso", "inference_kbs/espresso.kb", "-hot-drink", true)) succesCounter++;
-            if (this.TestFile("Unsolvable steam", "inference_kbs/steam.kb", "steam", false)) succesCounter++;
+            //if (this.TestFile("Unsolvable steam", "inference_kbs/steam.kb", "steam", false)) succesCounter++;
 
             double succesRatio = succesCounter / (double)this.InferenceTestCounter;
             Console.WriteLine("Inference-succes-ratio: " + succesRatio + ", passed " + succesCounter + " of " + this.InferenceTestCounter);

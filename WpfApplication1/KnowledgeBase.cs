@@ -33,8 +33,6 @@ namespace ProjectAI.RouteFinding
                 var ey = int.Parse(entrySplit[4]);
                 var actionName = entrySplit[2];
 
-
-
                 var startState = kb.GetOrCreateState(sx, sy);
                 var endState = kb.GetOrCreateState(ex, ey);
 

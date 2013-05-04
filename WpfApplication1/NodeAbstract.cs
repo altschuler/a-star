@@ -22,9 +22,5 @@ namespace ProjectAI.RouteFinding
         }
 
         public abstract int CompareTo(object obj);
-
-        //public abstract NodeAbstract CreateChild(NodeAbstract node, ActionAbstract action,
-        //                                             StateAbstract endState, StateAbstract end, IKnowledgeBase kb,
-        //                                             IEnumerable<StateAbstract> explored);
     }
 }
