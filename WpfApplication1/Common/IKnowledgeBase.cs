@@ -6,6 +6,6 @@ namespace Heureka.Common
     {
         IEnumerable<ActionAbstract> ActionsForNode(NodeAbstract node);
 
-        NodeAbstract Resolve(NodeAbstract node, ActionAbstract action, StateAbstract targetState, IEnumerable<StateAbstract> explored);
+        NodeAbstract Resolve(NodeAbstract node, ActionAbstract action, StateAbstract targetState);
     }
 }

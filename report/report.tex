@@ -4,6 +4,7 @@
 \usepackage[latin1]{inputenc} 
 \usepackage[danish]{babel}
 \usepackage{listings} 
+\usepackage{subcaption}
 \usepackage{xcolor}
 \usepackage{amssymb} 
 \usepackage{amsmath} 
@@ -91,43 +92,64 @@ Dette medfører at når en knude én gang har været udforsket, skal andre ruter/gre
 SearchResult Search(Node initialNode, KnowledgeBase kb)
 {  frontier = new PriorityQueue<NodeAbstract>();
    explored = new List<StateAbstract>();
-   end = initialNode.Target;  //The target/goal state
+   end = initialNode.Target;  //Målet med søgningen
    frontier.Add(initialNode);
-    
+   explored.Add(initialNode.State);
+\end{lstlisting}
+Efter initialisering begynder den iterative søgning:
+\begin{lstlisting}[firstnumber=7]  
    while (frontier.Count > 0){
-      currentNode = frontier.Pop(); // Chooses the lowest-cost node in the frontier
-	  if (currentNode.State.Equals(end))
-	     return new SearchResult(currentNode, statesSearched, true); //Return if goal-state is reached
+      currentNode = frontier.Pop(); //elementet forrest i prioritetskøen skal udforskes
+      if (currentNode.State.Equals(end)) //Returnerer hvis målet er nået
+         return new SearchResult(currentNode, statesSearched, true); 
 		
-        explored.Add(currentNode.State);
-        
-        var actions = kb.ActionsForNode(currentNode); //Get available actions to the State of the current Node
+      actions = kb.ActionsForNode(currentNode);//Handlinger der er relevante for knuden	
 
-		foreach (var action in actions)
-         {
-			var child = kb.Resolve(currentNode, action, end, explored);
-			if (!explored.Contains(child.State))
-            {
-				explored.Add(child.State);
-				frontier.Add(child);
-            }else{
-				//Giver mening hvis man ser eksemplet i bogen s. 84.
-				for (int i = 0; i < frontier.Count; i++)
-				{
-					var frontierNode = frontier[i];
-					if (frontierNode.State.Equals(child.State) && frontierNode.PathCost > child.PathCost)
-					{
-						frontier[i] = child;
-						break;
-					}
-				}
-			}
-        }
-    }
-    return new SearchResult(null, statesSearched, false);
+      foreach (var action in actions){ //Knuden udforskes
+         child = kb.Resolve(currentNode, action, end);//Udfør handling
+         if (!explored.Contains(child.State) && !frontier.Contains(child)){
+            explored.Add(child.State);
+            frontier.Add(child);
+         }
+\end{lstlisting}
+Hvis hverken \code{explored} eller \code{frontier}indeholder \code{child-knuden} bliver denne tilføjet til \code{explored} og \code{frontier}.
+Ellers, hvis \code{frontier} indeholder en \code{State} lig den i \code{child} skal der kontrolleres om den har en lavere \code{PathCost}, og i så fald erstattes.
+\begin{lstlisting}[firstnumber=20]
+         else{
+            for (int i = 0; i < frontier.Count; i++){
+               frontierNode = frontier[i];
+               if (frontierNode.State.Equals(child.State)
+                  && frontierNode.PathCost > child.PathCost){
+                  frontier[i] = child;
+                  break;}
+            }
+         }
+      }
+   }
+   return new SearchResult(null, statesSearched, false);
 }
 
 \end{lstlisting}
+Hvis ovenstående kontrol undlades, risikeres det at søgningen returnerer en sub-optimal løsning:
+
+\begin{figure}
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=.4\linewidth]{simple_optimal.png}
+  \caption{Her ses søgningen som den bør foregå}
+  \label{src:optimal}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=.4\linewidth]{simple_suboptimal.png}
+  \caption{Her ses resultatet af søgningen, når den omtalte kontrol undlades}
+  \label{src:suboptimal}
+\end{subfigure}
+\caption{...}
+\label{src:control_loop}
+\end{figure}
+
+
 
 
 

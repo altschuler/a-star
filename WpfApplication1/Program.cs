@@ -37,7 +37,7 @@ namespace Heureka
 
             suite.Run();
 
-            this.PaintRoute("Copenhagen", "route_kbs/copenhagen_holy_moses.kb", 10, 70, 65, 100);
+            this.PaintRoute("Copenhagen", "route_kbs/copenhagen_holy_moses.kb",10,70,65,100);
         }
 
         private void RunInferenceTests()
@@ -70,7 +70,7 @@ namespace Heureka
         private void OnPaint(object sender, PaintEventArgs args)
         {
             if (this.RouteSearchResult == null)  return;
-            Painter.DrawKnowledgeBase(args.Graphics, this.RouteSearchResult.TraceNode as RouteFindingNode, this.RouteFindingKb, new RouteFindingState(10,70), new RouteFindingState(65, 100));
+            Painter.DrawKnowledgeBase(args.Graphics, this.RouteSearchResult.TraceNode as RouteFindingNode, this.RouteFindingKb, new RouteFindingState(10,70), new RouteFindingState(65,100));
         }
     }
 }

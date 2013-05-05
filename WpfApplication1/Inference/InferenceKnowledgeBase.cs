@@ -14,7 +14,7 @@ namespace Heureka.Inference
             this.Rules = new List<InferenceState>();
         }
 
-        public InferenceNode ApplyResolution(InferenceNode parent, ActionAbstract act, IEnumerable<StateAbstract> explored)
+        public InferenceNode ApplyResolution(InferenceNode parent, ActionAbstract act)
         {
             var state = new InferenceState();
             var action = act.StartState as InferenceState;
@@ -114,9 +114,9 @@ namespace Heureka.Inference
             return actions;
         }
 
-        public NodeAbstract Resolve(NodeAbstract parent, ActionAbstract action, StateAbstract targetState, IEnumerable<StateAbstract> explored)
+        public NodeAbstract Resolve(NodeAbstract parent, ActionAbstract action, StateAbstract targetState)
         {
-            return this.ApplyResolution(parent as InferenceNode, action, explored);
+            return this.ApplyResolution(parent as InferenceNode, action);
         }
 
         public static InferenceKnowledgeBase Parse(string[] lines)
