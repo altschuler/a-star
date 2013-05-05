@@ -214,10 +214,10 @@ Ydermere extender \code{Node}, \code{Action} og \code{State} i både inferens og 
 
 De største forskelle ligger i udregning af den heuristiske værdi, og hvad et \code{State} består af, samt hvad målet er. 
 
-I inferens søgningen/deduktionen udføres beviset ved hjælp af modstrid: Man negerer det (\code{StartState}) man ønsker at bevise (f.eks. $\lnot water$ hvis vi ønsker at bevise at vi har $water$), og vi går således efter den tomme klausul. Det gør vi fordi det vil betyde at det ikke er muligt \emph{ikke} at have $water$. 
+I inferens søgningen/deduktionen udføres beviset ved hjælp af modstrid: Man negerer det \code{StartState} man ønsker at bevise (f.eks. $\lnot water$ hvis man ønsker at bevise $water$), og går således efter den tomme klausul. Det gør man fordi det vil betyde at den opstillede KB ikke er konsistent, hvis det indførte udsagn er sandt.
 
 \subsection{Repræsentation af data / Datastrukturer}
-I inferens består et \code{State} af en liste af \code{Literal}s, kaldet en klausul. En \code{Literal} er en atomar konstant der enten er positiv eller negativ. Det kan f.eks. være $water$ som ville betyde at konstanten ``water'' er tilstede, hvorimod $\lnot water$ ville betyde at ``water'' \emph{ikke} er tilstede.
+I inferens består et \code{State} af en liste af \code{Literal}s, kaldet en klausul. En \code{Literal} er en atomar konstant der enten er positiv eller negativ. Det kan f.eks. være $water$ som ville betyde at konstanten ``water'' gælder, hvorimod $\lnot water$ ville betyde at ``water'' \emph{ikke} gælder.
 
 En liste af disse kalder vi som sagt klausuler, og det er disse der udgør et \code{State} i inferens søgning. KB'en er i CNF\footnote{Artificial Intelligence: A modern approach (Russel \& Norvig, 1995), s. 278} format, hvilket vil sige at den er opstillet af et antal konjunkerede klausuler bestående af literaler.
 
