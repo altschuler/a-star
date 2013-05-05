@@ -14,6 +14,7 @@
 \usepackage{graphicx} 
 \usepackage{epstopdf}
 \usepackage{abstract}
+\usepackage{url}
 
 
 % setup c sharp syntax highlight 
@@ -152,6 +153,9 @@ Dette bliver parset til to states (start og end) og en action i mellem dem, som 
 
 Hver linie i knowledge basen repræsenterer en \emph{ensrettet} vej, hvilket vil sige at der skal to linier til at beskrive en vej på hvilken man både kan gå den ene og den anden vej.
 
+\subsubsection{Prioritetskø}
+\code{A*} algoritmen gør brug af en såkaldt prioritetskø kaldet \code{frontier} i koden. Denne er implmenteret som en liste der sorterer alle elementerne ved hver indsættelse af et nyt element. Elementerne, som er \code{Node}s, sorteres efter deres totale estimerede cost til mål ($f(n)$), således at \code{Node}n der umiddelbart er mest lovende undersøges først.
+
 \subsection{Heuristik}
 Den heuristiske værdi for en \code{Node} (\code{h(node)}) i rutefinding er bestemt ud fra fugleflugts afstanden til målet. Den strategi egner sig bedst til åbne grafer uden ``blindgyder'', da \code{h(node)} ikke kan tage højde for disse og vil forsøge at gå ned af blindgyderne hvis de ligger tættere på målet. \code{f(node)}, altså den samlede heuristiske værdi (cost indtil nu plus estimeret afstand til mål), udregnes på følgende måde for enhver knude i grafen under rutefinding:
 \[ h(node) = \sqrt{(node.State.X - targetState.X)^2 + (node.State.Y - targetState.Y)^2} \]
@@ -163,7 +167,6 @@ Kørsel af en rutefinding foregår ved først at parse en tekstfil til en knowledge
 
 Vi har udvidet vores program med kode til at tegne en givnen rutefindings KB og den fundne rute mellem to knuder. På figur (\ref{scr:copenhagen}) ses hvordan programmet visualiserer en rute gennem København KB'en.
 
-
 \begin{figure}
   \centering
   \includegraphics{copenhagen.png}
@@ -171,13 +174,48 @@ Vi har udvidet vores program med kode til at tegne en givnen rutefindings KB og 
   \caption{Ruten (markeret med grønt) fra start (blå) til slut (rød) knuden. Det bemærkes at de fleste vejee er ensrettede og ruten derfor ikke tager den umiddelbart intuitive form}
 \end{figure}
 
-
 \section{Inferens} 
-\subsection{Repræsentation af data / Datastrukturer}
-\subsection{Resolution}
-\subsection{Heuristik}
-\subsection{Setup og kørsel af programmet}
+Inferens delen af koden er på de fleste områder meget lig rutefindingen. Vi har gjort koden generisk nok til at de begge benytter den samme \code{A*} implementation, og at begge slags KB implementerer et fælles interface.
 
+Ydermere extender \code{Node}, \code{Action} og \code{State} i både inferens og rutefinding fra de abstrakte implementationer, hvilket bl.a. er det der muliggør den ensartede \code{A*} søgning.
+
+De største forskelle ligger i udregning af den heuristiske værdi, og hvad et \code{State} består af, samt hvad målet er. 
+
+I inferens søgning har vi et \code{StartState} som er den negerede af det vi ønsker at bevise (f.eks. $\lnot water$ hvis vi ønsker at bevise at vi har $water$), og vi går således efter den tomme klausul. Det gør vi fordi det vil betyde at det ikke er muligt \emph{ikke} at have $water$. 
+
+\subsection{Repræsentation af data / Datastrukturer}
+I inferens består et \code{State} af en liste af \code{Literal}s, kaldet en klausul. En \code{Literal} er en atomar konstant der enten er positiv eller negativ. Det kan f.eks. være $water$ som ville betyde at konstanten ``water'' er tilstede, hvorimod $\lnot water$ ville betyde at ``water'' \emph{ikke} er tilstede.
+
+En liste af disse kalder vi som sagt klausuler, og det er disse der udgør et \code{State} i inferens søgning. KB'en er i CNF\footnote{Artificial Intelligence: A modern approach (Russel \& Norvig, 1995), s. 278} format, hvilket vil sige at den er opstillet af et antal konjunkerede klausuler bestående af literaler.
+
+Matematisk set har KB'en formattet:
+\[
+(P_1 \lor P_2 ... \lor P_n) \land (Q_1 \lor Q_2 ... \lor Q_n) ...
+\]
+Hvor paranteserne indeholder en klausul og det hele er en KB i CNF format. Ligesom i rutefinding bliver inferens KB'erne parset ud fra en tekstfil med følgende format
+\begin{lstlisting}
+-literal_1 literal_2
+-literal_2 literal_3
+literal_4 literal_1 literal_3
+\end{lstlisting}
+Her betyder ``-'' negering af literalet. Hver linie i filen svarer til en klausul af disjunkerede literaler.
+
+\subsubsection{Opstilling af en CNF KB}
+Når en KB skal opstilles i CNF format skal der sædvanligvis omskrives fra udsagnslogisk format til disjunkerede klausuler. Det har vi gjort ved at benytte regler som f.eks. De Morgans lov\footnote{Artificial Intelligence: A modern approach (Russel \& Norvig, 1995), s. 193}, og generelle omskrivningsregler\footnote{AI Lore 9 side 7 samt Russel \& Norvig s. 281}. Eksempelvis følgende omskrivning fra udsagnslogik til disjunkeret literaler:
+\[
+vand \land sol \to liv
+\equiv \lnot(vand \land sol) \lor liv
+\equiv \lnot vand \lor \lnot sol \lor liv
+\]
+
+\subsection{Resolution}
+Resolution af klausuler foregår ved 
+
+\subsection{Heuristik}
+Den heuristiske værdi i inferens er simpelthen lig med antallet af literaler i en klausul. Det er den fordi målet altid er den tomme klausul, da vi benytter indirekte bevis.
+
+\subsection{Setup og kørsel af programmet}
+Kørsel af en inferens søgning foregår på næsten identisk vis som i rutefinding. Der parses en tekstfil til en knowledge base og denne samt et start og mål \code{State} gives som parametre til \code{AStar.Search()} funktionen.
 
 \section*{Konklusion} 
 \subsection{Output?}
