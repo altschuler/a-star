@@ -34,7 +34,7 @@ namespace Heureka
             suite.AddTest("Copenhagen", "route_kbs/copenhagen_holy_moses.kb", "10 70,65 100", true);
             suite.AddTest("Romania", "route_kbs/romanian_cities.kb", "18 18,204 146", true);
             suite.AddTest("Romania", "route_kbs/romanian_cities_simple.kb", "18 18,204 146", true);
-            suite.AddTest("Biggie", "route_kbs/biggie.kb", "0 0,99 99", true);
+            //suite.AddTest("Biggie", "route_kbs/biggie.kb", "0 0,99 1", true);
 
             suite.Run();
 

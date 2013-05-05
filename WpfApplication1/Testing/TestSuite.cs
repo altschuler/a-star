@@ -46,6 +46,7 @@ namespace Heureka.Testing
                 }
                 else
                 {
+                    Console.Write(" ...Parsing.");
                     var kb = RouteFindingKnowledgeBase.Parse(File.ReadAllText(test.File));
 
                     var coords = test.Target.Split(',');
@@ -54,6 +55,7 @@ namespace Heureka.Testing
                     var startState = new RouteFindingState(int.Parse(startCoord[0]), int.Parse(startCoord[1]));
                     var endState = new RouteFindingState(int.Parse(endCoord[0]), int.Parse(endCoord[1]));
 
+                    Console.Write("..Solving. ");
                     result = AStar.Search(new RouteFindingNode(startState, endState), kb);
                 }
 

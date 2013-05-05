@@ -17,16 +17,16 @@ namespace Heureka.RouteFinding
         }
 
 
-        public override int CompareTo(object obj)
-        {
-            var other = obj as RouteFindingNode;
-            if (other == null) return 1;
-            if (this.EstimatedTotalPathCost > other.EstimatedTotalPathCost)
-                return 1;
-            if (this.EstimatedTotalPathCost < other.EstimatedTotalPathCost)
-                return -1;
-            return 0;
-        }
+        //public override int CompareTo(object obj)
+        //{
+        //    var other = obj as RouteFindingNode;
+        //    if (other == null) return 1;
+        //    if (this.EstimatedTotalPathCost > other.EstimatedTotalPathCost)
+        //        return 1;
+        //    if (this.EstimatedTotalPathCost < other.EstimatedTotalPathCost)
+        //        return -1;
+        //    return 0;
+        //}
 
         new public RouteFindingState State
         {
