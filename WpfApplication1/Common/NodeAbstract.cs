@@ -20,15 +20,6 @@ namespace Heureka.Common
             this.Action = action;
         }
 
-        public override int CompareTo(object obj)
-        {
-            var other = obj as NodeAbstract;
-            if (other == null) return 1;
-            if (this.EstimatedTotalPathCost > other.EstimatedTotalPathCost)
-                return 1;
-            if (this.EstimatedTotalPathCost < other.EstimatedTotalPathCost)
-                return -1;
-            return 0;
-        }
+        public abstract int CompareTo(Object obj);
     }
 }

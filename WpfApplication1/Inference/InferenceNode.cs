@@ -18,17 +18,17 @@ namespace Heureka.Inference
             this.EstimatedTotalPathCost = this.PathCost + this.State.Clause.Count;
         }
 
-        //public override int CompareTo(object obj)
-        //{
-        //    var other = obj as InferenceNode;
-        //    if (other == null) return 1;
-        //    if (this.State.Clause.Count > other.State.Clause.Count)
-        //        return 1;
-        //    if (this.State.Clause.Count < other.State.Clause.Count)
-        //        return -1;
+        public override int CompareTo(object obj)
+        {
+            var other = obj as InferenceNode;
+            if (other == null) return 1;
+            if (this.State.Clause.Count > other.State.Clause.Count)
+                return 1;
+            if (this.State.Clause.Count < other.State.Clause.Count)
+                return -1;
 
-        //    return 0;
-        //}
+            return 0;
+        }
 
         new public InferenceState State
         {
