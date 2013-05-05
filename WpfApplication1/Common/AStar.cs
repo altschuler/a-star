@@ -36,7 +36,7 @@ namespace Heureka.Common
                         statesSearched++;
                         
                     }
-                    else if(true)
+                    else if(false)
                     {
                         //Giver mening hvis man ser eksemplet i bogen s. 84. Måske den kun skal køres én gang når "end" er nået?
                         for (int i = 0; i < frontier.Count; i++)
