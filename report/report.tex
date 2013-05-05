@@ -155,10 +155,11 @@ Hvis ovenstående kontrol undlades, risikeres det at søgningen returnerer en sub-
   \caption{Det ses at algoritmen uden kontrol udelukkende arbejder ud fra den estimerede totale omkostning, og ikke får anvendt informationen fra \code{g(n)} om den reelle omkostning}
 \end{figure}
 
-
+\subsubsection{Prioritetskø}
+\code{A*} algoritmen gør brug af en såkaldt prioritetskø kaldet \code{frontier} i koden. Denne er implmenteret som en liste der sorterer alle elementerne ved hver indsættelse af et nyt element. Elementerne, som er \code{Node}s, sorteres efter deres totale estimerede cost til mål ($f(n)$), således at \code{Node}n der umiddelbart er mest lovende undersøges først. Dette er ikke den mest optimale måde at implementere en prioritets kø, men det er rigeligt til dette projekt.
 
 \section{Rutefinding} 
-I rutefinding har vi implementeret \code{A*} algoritmen med formålet at finde korteste vej i en vægtet graf, som repræsenterer **faktiske** kort over landområder.
+I rutefinding har vi implementeret \code{A*} algoritmen med formålet at finde korteste vej i en vægtet graf, som repræsenterer faktiske kort over landområder.
 Vi har testet vores implementation med de fra undervisningen givne kort over dele af København og "Manhattan".
 
 \subsection{Repræsentation af data / Datastrukturer}
@@ -179,22 +180,19 @@ Dette bliver parset til to states (start og end) og en action i mellem dem, som 
 
 Hver linie i knowledge basen repræsenterer en \emph{ensrettet} vej, hvilket vil sige at der skal to linier til at beskrive en vej på hvilken man både kan gå den ene og den anden vej.
 
-\subsubsection{Prioritetskø}
-**Flyt dette op under afsnittet om A* ? **\code{A*} algoritmen gør brug af en såkaldt prioritetskø kaldet \code{frontier} i koden. Denne er implmenteret som en liste der sorterer alle elementerne ved hver indsættelse af et nyt element. Elementerne, som er \code{Node}s, sorteres efter deres totale estimerede cost til mål ($f(n)$), således at \code{Node}n der umiddelbart er mest lovende undersøges først.
 
 \subsection{Heuristik}
 Den heuristiske værdi, \code{h(n)}, for en \code{Node}, n, i rutefinding er bestemt ud fra fugleflugts afstanden til målet.
-Den strategi egner sig bedst til åbne ** ?? ** grafer uden ``blindgyder'', da \code{h(n)} ikke kan tage højde for disse og vil forsøge at gå ned af blindgyderne hvis de geografisk ligger tættere på målet.
+Den strategi egner sig bedst til grafer med få ``blindgyder'', da \code{h(n)} ikke kan tage højde for disse og vil forsøge at gå ned af blindgyderne hvis de geografisk ligger tættere på målet.
 
- \code{f(n)}, den samlede estimerede omkostning (cost indtil nu plus estimeret afstand til mål), udregnes på følgende måde for enhver knude i grafen under rutefinding:
+\code{f(n)}, den samlede estimerede omkostning (cost indtil nu plus estimeret afstand til mål), udregnes på følgende måde for enhver knude i grafen under rutefinding:
 \[ h(n) = \sqrt{(n.State.X - TargetState.X)^2 + (n.State.Y - TargetState.Y)^2} \]
 \[ g(n) = n.PathCost = n.Parent.PathCost + n.Action.Cost \]
 \[ f(n) = g(n) + h(n) \]
 Hvor \code{n.Parent} er den \code{Node} fra hvilken søgningen kom til den nuværende \code{Node}.
 
- \code{n.PathCost} er den faktiske omkostning for at komme til \code{Node}n fra startpunktet.
- **Det bemærkes at en \code{Node} har både en \code{Action} (som er den \code{Action} der blev taget for at komme \code{Node}n) og et \code{State}, som skal bruges til at udregne den samlede cost (\code{PathCost}). **
- ** Merge med afsnittet om A*?  **
+\code{n.PathCost} er den faktiske omkostning for at komme til \code{Node}n fra startpunktet.
+Det bemærkes at en \code{Node} har både en \code{Action} (som er den \code{Action} der blev taget for at komme \code{Node}n) og et \code{State}, som skal bruges til at udregne den samlede cost (\code{PathCost}).
 
 \subsection{Setup og kørsel af programmet}
 Kørsel af en rutefinding foregår ved først at parse en tekstfil til en knowledge base. Den KB, sammen med et \code{StartState} og \code{EndState} gives som parametre til \code{AStar.Search()}, som returnerer et \code{SearchResult}. \code{SearchResult} indeholder den funde mål \code{Node}, hvis der findes en sti.
