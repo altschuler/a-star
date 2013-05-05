@@ -28,34 +28,13 @@ namespace Heureka.Inference
                         // Merger samtlige literals fra de to clauses
                         state.Clause = parent.State.Clause.Concat(action.Clause).ToList();
 
-                        // Remove ONE positive
-                        foreach (var lit in state.Clause)
-                        {
-                            if (lit.Name.Equals(rule.Name) && lit.Proposition)
-                            {
-                                state.Clause.Remove(lit);
-                                break;
-                            }
-                        }
+                        // Fjern en enkelt positiv og en enkelt negativ
+                        state.Clause.Remove(state.Clause.First(lit => lit.Name.Equals(rule.Name) && lit.Proposition));
+                        state.Clause.Remove(state.Clause.First(lit => lit.Name.Equals(rule.Name) && !lit.Proposition));
 
-                        // Remove ONE negation
-                        foreach (var lit in state.Clause)
-                        {
-                            if (lit.Name.Equals(rule.Name) && !lit.Proposition)
-                            {
-                                state.Clause.Remove(lit);
-                                break;
-                            }
-                        }
+                        // Fjerne duplikater, f.eks. A & A & B -> A & B
+                        state.Clause = state.Clause.Distinct().ToList();
 
-                        //Removes duplicates such that "a OR a OR b" becomes "a OR b"
-                        var ls = new List<Literal>();
-                        foreach (var lit in state.Clause)
-                        {
-                            if (!ls.Contains(lit)) 
-                                ls.Add(lit);
-                        }
-                        state.Clause = ls;
                         return new InferenceNode(parent, parent.Target, state, new InferenceAction(state, parent.Target));
                     }
                 }

@@ -12,6 +12,10 @@ namespace Heureka.Common
             var end = initialNode.Target;
             frontier.Add(initialNode);
             explored.Add(initialNode.State);
+//<<<<<<< HEAD
+//=======
+            
+//>>>>>>> cb9a1aaf7405db5cbc1becbefa4a8208eda35635
             while (frontier.Count > 0)
             {
                 // Chooses the lowest-cost node in the frontier
@@ -20,7 +24,10 @@ namespace Heureka.Common
                 if (currentNode.State.Equals(end))
                     return new SearchResult(currentNode, statesSearched, true);
 
+//<<<<<<< HEAD
                 
+//=======
+//>>>>>>> cb9a1aaf7405db5cbc1becbefa4a8208eda35635
                 //Get available actions to the State of the current Node
                 var actions = kb.ActionsForNode(currentNode);
 //Explore /expand the current node
