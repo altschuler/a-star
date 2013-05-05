@@ -84,11 +84,52 @@ Hermed forsøger algoritmen direkte at følge den korteste rute til mål-knuden.
 Når algoritmen udforsker en knude, vil det i kraft af \code{f(n)}, være den på den korteste rute til mål-knuden gennem den givne knude.
 Dette medfører at når en knude én gang har været udforsket, skal andre ruter/grene af søgningen ikke efterfølgende udforske ruter hvori den indgår, da disse vil have større \code{f(n)} i sidste ende.
 
-\subsection{Algoritmen}
-Derp derp derp
-
 \subsection{Cost-funktion og Heurestik}
-Er vel beskrevet under \code{A*)} generelt?
+
+\subsection{Implementering af algoritmen}
+\begin{lstlisting}
+SearchResult Search(Node initialNode, KnowledgeBase kb)
+{ var frontier = new PriorityQueue<NodeAbstract>();
+  var explored = new List<StateAbstract>();
+  StateAbstract end = initialNode.Target;
+  frontier.Add(initialNode);
+    
+	while (frontier.Count > 0){
+        var currentNode = frontier.Pop(); // Chooses the lowest-cost node in the frontier
+		if (currentNode.State.Equals(end))
+			return new SearchResult(currentNode, statesSearched, true); //Return if goal-state is reached
+		
+        explored.Add(currentNode.State);
+        
+        var actions = kb.ActionsForNode(currentNode); //Get available actions to the State of the current Node
+
+		foreach (var action in actions)
+         {
+			var child = kb.Resolve(currentNode, action, end, explored);
+			if (!explored.Contains(child.State))
+            {
+				explored.Add(child.State);
+				frontier.Add(child);
+            }else{
+				//Giver mening hvis man ser eksemplet i bogen s. 84.
+				for (int i = 0; i < frontier.Count; i++)
+				{
+					var frontierNode = frontier[i];
+					if (frontierNode.State.Equals(child.State) && frontierNode.PathCost > child.PathCost)
+					{
+						frontier[i] = child;
+						break;
+					}
+				}
+			}
+        }
+    }
+    return new SearchResult(null, statesSearched, false);
+}
+
+\end{lstlisting}
+
+
 
 \section{Rutefinding} 
 \subsection{Repræsentation af data / Datastrukturer}

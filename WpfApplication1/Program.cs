@@ -24,7 +24,6 @@ namespace Heureka
             this.RunInferenceTests();
             this.RunRouteFindingTests();
 
-            this.PaintRoute();
         }
 
         private void RunRouteFindingTests()
@@ -32,7 +31,13 @@ namespace Heureka
             var suite = new TestSuite("Route finding", false);
             suite.AddTest("Manhattan", "route_kbs/manhattan.kb", "0 0,9 5", true);
             suite.AddTest("Copenhagen", "route_kbs/copenhagen.kb", "45 70,65 100", true);
+            suite.AddTest("Copenhagen", "route_kbs/copenhagen_holy_moses.kb", "45 70,65 100", true);
+            suite.AddTest("Romania", "route_kbs/romanian_cities.kb", "18 18,204 146", true);
+            suite.AddTest("Romania", "route_kbs/romanian_cities_simple.kb", "18 18,204 146", true);
+
             suite.Run();
+
+            this.PaintRoute("Copenhagen", "route_kbs/copenhagen_holy_moses.kb", 45, 70, 65, 100);
         }
 
         private void RunInferenceTests()
@@ -51,21 +56,21 @@ namespace Heureka
             suite.Run();
         }
 
-        private void PaintRoute()
+        private void PaintRoute(String name, String filepath, int x1, int y1, int x2, int y2)
         {
             // Setup window
             this.Size = new Size(500, 500);
-            this.Text = "Copenhagen route";
+            this.Text = name;
             this.Paint += this.OnPaint;
 
-            this.RouteFindingKb = RouteFindingKnowledgeBase.Parse(File.ReadAllText("route_kbs/copenhagen.kb"));
-            this.RouteSearchResult = AStar.Search(new RouteFindingNode(new RouteFindingState(45, 70), new RouteFindingState(65, 100)), this.RouteFindingKb);
+            this.RouteFindingKb = RouteFindingKnowledgeBase.Parse(File.ReadAllText(filepath));
+            this.RouteSearchResult = AStar.Search(new RouteFindingNode(new RouteFindingState(x1, y1), new RouteFindingState(x2, y2)), this.RouteFindingKb);
         }
 
         private void OnPaint(object sender, PaintEventArgs args)
         {
             if (this.RouteSearchResult == null)  return;
-            Painter.DrawKnowledgeBase(args.Graphics, this.RouteSearchResult.TraceNode as RouteFindingNode, this.RouteFindingKb, new RouteFindingState(45, 70), new RouteFindingState(65, 100));
+            Painter.DrawKnowledgeBase(args.Graphics, this.RouteSearchResult.TraceNode as RouteFindingNode, this.RouteFindingKb, new RouteFindingState(45,70), new RouteFindingState(65, 100));
         }
     }
 }

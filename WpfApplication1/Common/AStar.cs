@@ -18,9 +18,7 @@ namespace Heureka.Common
                 var currentNode = frontier.Pop();
 
                 if (currentNode.State.Equals(end))
-                {
                     return new SearchResult(currentNode, statesSearched, true);
-                }
 
                 explored.Add(currentNode.State);
                 //Get available actions to the State of the current Node
@@ -30,23 +28,36 @@ namespace Heureka.Common
                 {
                     var child = kb.Resolve(currentNode, action, end, explored);
 
-                    statesSearched++;
+                    
                     if (!explored.Contains(child.State))
                     {
                         explored.Add(child.State);
                         frontier.Add(child);
+                        statesSearched++;
+                        
                     }
-
-                    //Giver mening hvis man ser eksemplet i bogen s. 84. Måske den kun skal køres én gang når "end" er nået?
-                    //for (int i = 0; i < frontier.Count; i++)
-                    //{
-                    //    var frontierNode = frontier[i];
-                    //    if (frontierNode.State.Equals(child.State) && frontierNode.PathCost > child.PathCost)
-                    //    {
-                    //        frontier[i] = child;
-                    //        break;
-                    //    }
-                    //}
+                    else if(true)
+                    {
+                        //Giver mening hvis man ser eksemplet i bogen s. 84. Måske den kun skal køres én gang når "end" er nået?
+                        for (int i = 0; i < frontier.Count; i++)
+                        {
+                            var frontierNode = frontier[i];
+                            if (frontierNode.State.Equals(child.State) && frontierNode.PathCost > child.PathCost)
+                            {
+                                //System.Console.WriteLine("fronter[" + i + "].PathCost: " + frontier[i].PathCost + ", child.PathCost: " + child.PathCost);
+                                //System.Console.WriteLine("fronter[" + i + "].EstimatedTotalCost: " + frontier[i].EstimatedTotalPathCost + ", child.EstimatedTotalCost: " + child.EstimatedTotalPathCost);
+                                //System.Console.WriteLine("number of nodes added to frontier: " + statesSearched);
+                                //System.Console.WriteLine("X: " +((RouteFinding.RouteFindingNode)child).State.X);
+                                //System.Console.WriteLine("Y: " + ((RouteFinding.RouteFindingNode)child).State.Y);
+                                //System.Console.WriteLine("child.parentX: " + ((RouteFinding.RouteFindingNode)child.Parent).State.X);
+                                //System.Console.WriteLine("child.parentY: " + ((RouteFinding.RouteFindingNode)child.Parent).State.Y);
+                                //System.Console.WriteLine("frontierNode.parentX: " + ((RouteFinding.RouteFindingNode)frontierNode.Parent).State.X);
+                                //System.Console.WriteLine("frontierNode.parentY: " + ((RouteFinding.RouteFindingNode)frontierNode.Parent).State.Y);
+                                frontier[i] = child;
+                                break;
+                            }
+                        }
+                    }
                 }
             }
 
