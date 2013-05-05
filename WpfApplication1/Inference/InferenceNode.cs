@@ -2,32 +2,20 @@
 
 namespace Heureka.Inference
 {
-    public class InferenceNode : NodeAbstract
+    public class InferenceNode : AbstractNode
     {
-        public InferenceNode(StateAbstract startState, StateAbstract targetState)
+        public InferenceNode(AbstractState startState, AbstractState targetState)
             : base(startState, targetState, null, null)
         {
             this.PathCost = 0;
             this.EstimatedTotalPathCost = this.PathCost + this.State.Clause.Count;
         }
 
-        public InferenceNode(NodeAbstract parent, StateAbstract target, StateAbstract state, ActionAbstract action)
+        public InferenceNode(AbstractNode parent, AbstractState target, AbstractState state, AbstractAction action)
             : base(state, target, parent, action)
         {
             this.PathCost = this.Parent.PathCost + 1;
-            this.EstimatedTotalPathCost = this.PathCost + this.State.Clause.Count;
-        }
-
-        public override int CompareTo(object obj)
-        {
-            var other = obj as InferenceNode;
-            if (other == null) return 1;
-            if (this.State.Clause.Count > other.State.Clause.Count)
-                return 1;
-            if (this.State.Clause.Count < other.State.Clause.Count)
-                return -1;
-
-            return 0;
+            this.EstimatedTotalPathCost = this.State.Clause.Count;
         }
 
         new public InferenceState State

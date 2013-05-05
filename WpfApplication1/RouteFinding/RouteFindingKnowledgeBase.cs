@@ -7,15 +7,15 @@ namespace Heureka.RouteFinding
 {
     public class RouteFindingKnowledgeBase : IKnowledgeBase
     {
-        public List<ActionAbstract> Actions { get; set; }
-        public List<StateAbstract> States { get; set; }
+        public List<AbstractAction> Actions { get; set; }
+        public List<AbstractState> States { get; set; }
 
         public static RouteFindingKnowledgeBase Parse(string data)
         {
             var kb = new RouteFindingKnowledgeBase
                 {
-                    Actions = new List<ActionAbstract>(),
-                    States = new List<StateAbstract>()
+                    Actions = new List<AbstractAction>(),
+                    States = new List<AbstractState>()
                 };
 
             var split = data.Split('\n');
@@ -59,12 +59,12 @@ namespace Heureka.RouteFinding
             return (RouteFindingState)state;
         }
 
-        public IEnumerable<ActionAbstract> ActionsForNode(NodeAbstract node)
+        public IEnumerable<AbstractAction> ActionsForNode(AbstractNode node)
         {
             return this.Actions.Where(a => a.StartState.Equals(node.State)).ToList();
         }
 
-        public NodeAbstract Resolve(NodeAbstract parent, ActionAbstract action, StateAbstract targetState)
+        public AbstractNode Resolve(AbstractNode parent, AbstractAction action, AbstractState targetState)
         {
             return new RouteFindingNode(parent, action, action.EndState as RouteFindingState, targetState as RouteFindingState);
         }

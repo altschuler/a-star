@@ -4,8 +4,8 @@ namespace Heureka.Common
 {
     public interface IKnowledgeBase
     {
-        IEnumerable<ActionAbstract> ActionsForNode(NodeAbstract node);
+        IEnumerable<AbstractAction> ActionsForNode(AbstractNode node);
 
-        NodeAbstract Resolve(NodeAbstract node, ActionAbstract action, StateAbstract targetState);
+        AbstractNode Resolve(AbstractNode node, AbstractAction action, AbstractState targetState);
     }
 }

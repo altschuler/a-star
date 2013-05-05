@@ -2,7 +2,7 @@
 
 namespace Heureka.RouteFinding
 {
-    public class RouteFindingState : StateAbstract
+    public class RouteFindingState : AbstractState
     {
         public int X { get; set; }
         public int Y { get; set; }

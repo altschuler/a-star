@@ -3,11 +3,11 @@ using Heureka.Common;
 
 namespace Heureka.RouteFinding
 {
-    public class RouteFindingAction : ActionAbstract
+    public class RouteFindingAction : AbstractAction
     {
         public String Name { get; set; }
 
-        public RouteFindingAction(String name, StateAbstract startState, StateAbstract endState)
+        public RouteFindingAction(String name, AbstractState startState, AbstractState endState)
             : base(startState, endState)
         {
             this.Name = name;

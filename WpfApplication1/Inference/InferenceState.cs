@@ -4,7 +4,7 @@ using Heureka.Common;
 
 namespace Heureka.Inference
 {
-    public class InferenceState : StateAbstract
+    public class InferenceState : AbstractState
     {
         public List<Literal> Clause { get; set; }
 

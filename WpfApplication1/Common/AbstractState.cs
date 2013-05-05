@@ -1,6 +1,6 @@
 ﻿namespace Heureka.Common
 {
-    public abstract class StateAbstract
+    public abstract class AbstractState
     {
     }
 }
