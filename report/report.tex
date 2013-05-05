@@ -179,12 +179,14 @@ Inferens delen af koden er på de fleste områder meget lig rutefindingen. Vi har 
 
 Ydermere extender \code{Node}, \code{Action} og \code{State} i både inferens og rutefinding fra de abstrakte implementationer, hvilket bl.a. er det der muliggør den ensartede \code{A*} søgning.
 
-De største forskelle ligger i udregning af den heuristiske værdi, og hvad et \code{State} består af.
+De største forskelle ligger i udregning af den heuristiske værdi, og hvad et \code{State} består af, samt hvad målet er. 
+
+I inferens søgning har vi et \code{StartState} som er den negerede af det vi ønsker at bevise (f.eks. $\lnot water$ hvis vi ønsker at bevise at vi har $water$), og vi går således efter den tomme klausul. Det gør vi fordi det vil betyde at det ikke er muligt \emph{ikke} at have $water$. 
 
 \subsection{Repræsentation af data / Datastrukturer}
 I inferens består et \code{State} af en liste af \code{Literal}s, kaldet en klausul. En \code{Literal} er en atomar konstant der enten er positiv eller negativ. Det kan f.eks. være $water$ som ville betyde at konstanten ``water'' er tilstede, hvorimod $\lnot water$ ville betyde at ``water'' \emph{ikke} er tilstede.
 
-En liste af disse kalder vi som sagt klausuler, og det er disse der udgør et \code{State} i inferens søgning. KB'en er i CNF\footnote{Conjunctive Normal Form, \url{http://en.wikipedia.org/wiki/Conjunctive_normal_form}} format, hvilket vil sige at den er opstillet af et antal konjunkerede klausuler bestående af literaler.
+En liste af disse kalder vi som sagt klausuler, og det er disse der udgør et \code{State} i inferens søgning. KB'en er i CNF\footnote{Artificial Intelligence: A modern approach (Russel \& Norvig, 1995), s. 278} format, hvilket vil sige at den er opstillet af et antal konjunkerede klausuler bestående af literaler.
 
 Matematisk set har KB'en formattet:
 \[
@@ -199,12 +201,21 @@ literal_4 literal_1 literal_3
 Her betyder ``-'' negering af literalet. Hver linie i filen svarer til en klausul af disjunkerede literaler.
 
 \subsubsection{Opstilling af en CNF KB}
-Når en KB skal opstilles i CNF format skal der sædvanligvis omskrives fra udsagnslogisk format til disjunkerede klausuler. Det har vi gjort ved at benytte regler som f.eks. De Morgans lov\footnote{Artificial Intelligence: A modern approach (Russel \& Norvig, 1995), s. 193} 
+Når en KB skal opstilles i CNF format skal der sædvanligvis omskrives fra udsagnslogisk format til disjunkerede klausuler. Det har vi gjort ved at benytte regler som f.eks. De Morgans lov\footnote{Artificial Intelligence: A modern approach (Russel \& Norvig, 1995), s. 193}, og generelle omskrivningsregler\footnote{AI Lore 9 side 7 samt Russel \& Norvig s. 281}. Eksempelvis følgende omskrivning fra udsagnslogik til disjunkeret literaler:
+\[
+vand \land sol \to liv
+\equiv \lnot(vand \land sol) \lor liv
+\equiv \lnot vand \lor \lnot sol \lor liv
+\]
 
 \subsection{Resolution}
-\subsection{Heuristik}
-\subsection{Setup og kørsel af programmet}
+Resolution af klausuler foregår ved 
 
+\subsection{Heuristik}
+Den heuristiske værdi i inferens er simpelthen lig med antallet af literaler i en klausul. Det er den fordi målet altid er den tomme klausul, da vi benytter indirekte bevis.
+
+\subsection{Setup og kørsel af programmet}
+Kørsel af en inferens søgning foregår på næsten identisk vis som i rutefinding. Der parses en tekstfil til en knowledge base og denne samt et start og mål \code{State} gives som parametre til \code{AStar.Search()} funktionen.
 
 \section*{Konklusion} 
 \subsection{Output?}
