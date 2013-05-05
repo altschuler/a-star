@@ -7,3 +7,7 @@ Properties/
 *.suo
 *.csproj
 *.user
+report.aux
+report.log
+report.out
+report.pdf
