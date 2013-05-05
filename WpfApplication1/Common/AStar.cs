@@ -4,10 +4,10 @@ namespace Heureka.Common
 {
     static class AStar
     {
-        public static SearchResult Search(NodeAbstract initialNode, IKnowledgeBase kb)
+        public static SearchResult Search(AbstractNode initialNode, IKnowledgeBase kb)
         {
-            var frontier = new PriorityQueue<NodeAbstract>();
-            var explored = new List<StateAbstract>();
+            var frontier = new PriorityQueue<AbstractNode>();
+            var explored = new List<AbstractState>();
             var statesSearched = 0; //Bliver kun brugt af os af ren interesse
             var end = initialNode.Target;
             frontier.Add(initialNode);

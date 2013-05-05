@@ -2,9 +2,9 @@
 
 namespace Heureka.Inference
 {
-    public class InferenceAction : ActionAbstract
+    public class InferenceAction : AbstractAction
     {
-        public InferenceAction(StateAbstract startState, StateAbstract endState)
+        public InferenceAction(AbstractState startState, AbstractState endState)
             : base(startState, endState) {}
 
         // Cost is uniform in inference searching

@@ -14,7 +14,7 @@ namespace Heureka.Inference
             this.Rules = new List<InferenceState>();
         }
 
-        public InferenceNode ApplyResolution(InferenceNode parent, ActionAbstract act)
+        public InferenceNode ApplyResolution(InferenceNode parent, AbstractAction act)
         {
             var state = new InferenceState();
             var actionState = act.StartState as InferenceState;
@@ -44,7 +44,7 @@ namespace Heureka.Inference
             return new InferenceNode(parent, parent.Target, state, new InferenceAction(state, parent.Target));
         }
 
-        public IEnumerable<ActionAbstract> ActionsForNode(NodeAbstract node)
+        public IEnumerable<AbstractAction> ActionsForNode(AbstractNode node)
         {
             var relevantRules = this.Rules.ToList();
 
@@ -74,7 +74,7 @@ namespace Heureka.Inference
             }
             //Ovenstående er et forsøg på at anvende anscestor rigtigt.
 
-            var actions = new List<ActionAbstract>();
+            var actions = new List<AbstractAction>();
             //foreach (var state in Rules)
             foreach (var state in relevantRules)
             {
@@ -93,7 +93,7 @@ namespace Heureka.Inference
             return actions;
         }
 
-        public NodeAbstract Resolve(NodeAbstract parent, ActionAbstract action, StateAbstract targetState)
+        public AbstractNode Resolve(AbstractNode parent, AbstractAction action, AbstractState targetState)
         {
             return this.ApplyResolution(parent as InferenceNode, action);
         }
