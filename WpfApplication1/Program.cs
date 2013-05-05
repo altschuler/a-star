@@ -47,6 +47,7 @@ namespace Heureka
             suite.AddTest("No steam (boiler off)", "inference_kbs/steam_boiler_off.kb", "steam", true);
             suite.AddTest("No steam (boiler broken)", "inference_kbs/steam_boiler_broken.kb", "steam", true);
             suite.AddTest("Espresso", "inference_kbs/espresso.kb", "-hot-drink", true);
+            //suite.AddTest("Steam", "inference_kbs/steam.kb", "steam", true);
             suite.Run();
         }
 

@@ -7,9 +7,9 @@ namespace Heureka.Inference
         public InferenceAction(StateAbstract startState, StateAbstract endState)
             : base(startState, endState) {}
 
+        // Cost is uniform in inference searching
         public override double Cost
         {
-            // Cost is uniform
             get { return 1; }
         }
     }
