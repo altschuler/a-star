@@ -11,6 +11,7 @@ namespace Heureka.Common
             var statesSearched = 0; //Bliver kun brugt af os af ren interesse
             var end = initialNode.Target;
             frontier.Add(initialNode);
+            explored.Add(initialNode.State);
             
             while (frontier.Count > 0)
             {
@@ -20,7 +21,6 @@ namespace Heureka.Common
                 if (currentNode.State.Equals(end))
                     return new SearchResult(currentNode, statesSearched, true);
 
-                explored.Add(currentNode.State);
                 //Get available actions to the State of the current Node
                 var actions = kb.ActionsForNode(currentNode);
 //Explore /expand the current node
