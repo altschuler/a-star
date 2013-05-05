@@ -68,7 +68,11 @@ I opgaven vil teorien bag samt implementationen blive gennemgået.
 
 \section{Introduktion} 
 
-Til projektet har vi brugt \code{C\#} til implementation af programmet. 
+Til projektet har vi brugt \code{C\#} til implementation af programmet. Vi har gjort brug af \code{LINQ}\footnote{\url{http://en.wikipedia.org/wiki/Language_Integrated_Query}} til data håndtering i mange tilfælde. 
+
+Vi har bestræbet os på at implementere et system der er generisk nok til at håndtere både inferens og rutefinding på hovedsageligt samme vis. Vi har implementeret tests af mange forskellige edge-cases, eksempelvis et tilfælde i inferens hvor ancestor resolution er nødvendig.
+
+Vi gennemgår først hvordan søgningen foregår teoretisk, og derefter hvor det er implementeret for henholdsvis rutefinding og inferens, og forskellen derimellem.
 
 \section{\code{A*} generelt} 
 \code{A*}-algoritmen bruges generelt til at søge mere effektivt i grafer, end \code{BFS} og \code{UCS}, som den tager udgangspunkt i.
@@ -93,46 +97,46 @@ Vi har forsøgt at implementere algoritmen så generisk som muligt, sådan at så læ
 Et \code{State} svarer til en knude i grafen, hvor en \code{Action} svarer til en kant mellem to knuder. 
 En \code{Node}, n, er en knude i det søgetræ der fremkommer ved søgning i grafen, og indeholder information om \code{State}, \code{Action}, \code{Parent} (forgænger i søgetræet) samt \code{g(n)} og \code{h(n)}
 
-Vi har taget udgangspunkt i UCS som beskrevet i bogen Artifi... side 84.
+Vi har taget udgangspunkt i UCS\footnote{Artificial Intelligence: A modern approach (Russel \& Norvig, 3rd edition) s. 84}
 \begin{lstlisting}
-SearchResult Search(Node initialNode, KnowledgeBase kb)
-{  frontier = new PriorityQueue<NodeAbstract>();
-   explored = new List<StateAbstract>();
-   end = initialNode.Target;  //Målet med søgningen
-   frontier.Add(initialNode);
-   explored.Add(initialNode.State);
+SearchResult Search(Node initialNode, KnowledgeBase kb) {  
+  frontier = new PriorityQueue<NodeAbstract>();
+  explored = new List<StateAbstract>();
+  end = initialNode.Target;  //Målet med søgningen
+  frontier.Add(initialNode);
+  explored.Add(initialNode.State);
 \end{lstlisting}
 Efter initialisering begynder den iterative søgning:
 \begin{lstlisting}[firstnumber=7]  
-   while (frontier.Count > 0){
-      currentNode = frontier.Pop(); //elementet forrest i prioritetskøen skal udforskes
-      if (currentNode.State.Equals(end)) //Returnerer hvis målet er nået
-         return new SearchResult(currentNode, statesSearched, true); 
-		
-      actions = kb.ActionsForNode(currentNode);//Handlinger der er relevante for knuden	
-
-      foreach (var action in actions){ //Knuden udforskes
-         child = kb.Resolve(currentNode, action, end);//Udfør handling
-         if (!explored.Contains(child.State) && !frontier.Contains(child)){
-            explored.Add(child.State);
-            frontier.Add(child);
-         }
+  while (frontier.Count > 0) {
+    currentNode = frontier.Pop(); //elementet forrest i prioritetskøen skal udforskes
+    if (currentNode.State.Equals(end)) //Returnerer hvis målet er nået
+      return new SearchResult(currentNode, statesSearched, true); 
+   	
+    actions = kb.ActionsForNode(currentNode);//Handlinger der er relevante for knuden	
+  
+    foreach (var action in actions) { //Knuden udforskes
+      child = kb.Resolve(currentNode, action, end); //Udfør handling
+      if (!explored.Contains(child.State) && !frontier.Contains(child)) {
+        explored.Add(child.State);
+        frontier.Add(child);
+      }
 \end{lstlisting}
 Hvis hverken \code{explored} eller \code{frontier} indeholder \code{child-knuden} bliver denne tilføjet til \code{explored} og \code{frontier}.
 Ellers hvis \code{frontier} indeholder en \code{State} lig \code{child.State}, skal der undersøges om \code{child.State} har en lavere \code{PathCost}, og i så fald erstattes.
 \begin{lstlisting}[firstnumber=20]
-         else{
-            for (int i = 0; i < frontier.Count; i++){
-               frontierNode = frontier[i];
-               if (frontierNode.State.Equals(child.State)
-                  && frontierNode.PathCost > child.PathCost){
-                  frontier[i] = child;
-                  break;}
-            }
-         }
+      else {
+        for (int i = 0; i < frontier.Count; i++) {
+          frontierNode = frontier[i];
+          if (frontierNode.State.Equals(child.State)
+            && frontierNode.PathCost > child.PathCost) {
+            frontier[i] = child;
+            break;}
+        }
       }
-   }
-   return new SearchResult(null, statesSearched, false);
+    }
+  }
+  return new SearchResult(null, statesSearched, false);
 }
 
 \end{lstlisting}
@@ -198,7 +202,7 @@ Det bemærkes at en \code{Node} har både en \code{Action} (som er den \code{Actio
 Kørsel af en rutefinding foregår ved først at parse en tekstfil til en knowledge base. Den KB, sammen med et \code{StartState} og \code{EndState} gives som parametre til \code{AStar.Search()}, som returnerer et \code{SearchResult}. \code{SearchResult} indeholder den funde mål \code{Node}, hvis der findes en sti.
 Denne \code{Node} er første element i en linked list af \code{Node}s som fører tilbage til knuden der blev søgt fra ved hjælp af deres \code{Parent}-egenskab. På den måde kan hele ruten printes/analyseres. 
 
-Vi har udvidet vores program med kode til at tegne en given rute-graf og den fundne rute mellem to knuder. På figur (\ref{copenhagen}) ses hvordan programmet visualiserer en rute gennem København-grafen.
+Vi har udvidet vores program med kode til at tegne en given rute-graf og den fundne rute mellem to knuder. På figur nedenfor ses hvordan programmet visualiserer en rute gennem København-grafen.
 
 \begin{figure}[H]
   \centering
@@ -219,7 +223,7 @@ I inferens søgningen/deduktionen udføres beviset ved hjælp af modstrid: Man nege
 \subsection{Repræsentation af data / Datastrukturer}
 I inferens består et \code{State} af en liste af \code{Literal}s, kaldet en klausul. En \code{Literal} er en atomar konstant der enten er positiv eller negativ. Det kan f.eks. være $water$ som ville betyde at konstanten ``water'' gælder, hvorimod $\lnot water$ ville betyde at ``water'' \emph{ikke} gælder.
 
-En liste af disse kalder vi som sagt klausuler, og det er disse der udgør et \code{State} i inferens søgning. KB'en er i CNF\footnote{Artificial Intelligence: A modern approach (Russel \& Norvig, 1995), s. 278} format, hvilket vil sige at den er opstillet af et antal konjunkerede klausuler bestående af literaler.
+En liste af disse kalder vi som sagt klausuler, og det er disse der udgør et \code{State} i inferens søgning. KB'en er i CNF\footnote{Artificial Intelligence: A modern approach (Russel \& Norvig, 1st edition), s. 278} format, hvilket vil sige at den er opstillet af et antal konjunkerede klausuler bestående af literaler.
 
 Matematisk set har KB'en formattet:
 \[
@@ -234,7 +238,7 @@ literal_4 literal_1 literal_3
 Her betyder ``-'' negering af literalet. Hver linie i filen svarer til en klausul af disjunkerede literaler.
 
 \subsubsection{Opstilling af en CNF KB}
-Når en KB skal opstilles i CNF format skal der sædvanligvis omskrives fra udsagnslogisk format til disjunkerede klausuler. Det har vi gjort ved at benytte regler som f.eks. De Morgans lov\footnote{Artificial Intelligence: A modern approach (Russel \& Norvig, 1995), s. 193}, og generelle omskrivningsregler\footnote{AI Lore 9 side 7 samt Russel \& Norvig s. 281}. Eksempelvis følgende omskrivning fra udsagnslogik til disjunkeret literaler:
+Når en KB skal opstilles i CNF format skal der sædvanligvis omskrives fra udsagnslogisk format til disjunkerede klausuler. Det har vi gjort ved at benytte regler som f.eks. De Morgans lov\footnote{Artificial Intelligence: A modern approach (Russel \& Norvig, 1st edition), s. 193}, og generelle omskrivningsregler\footnote{AI Lore 9 side 7 samt Artificial Intelligence: A modern approach (Russel \& Norvig, 1st edition) s. 281}. Eksempelvis følgende omskrivning fra udsagnslogik til disjunkeret literaler:
 \[
 vand \land sol \to liv
 \equiv \lnot(vand \land sol) \lor liv
@@ -244,31 +248,28 @@ vand \land sol \to liv
 \subsection{Resolution}
 Når metoden Resolve(\code{Node}, \code{Action}) bliver kaldet i inferens-delen, bliver der udført resolution af to klausuler. Det har vi implementeret på følgende måde:
 \begin{lstlisting}[mathescape]
-foreach (var firstLiteral in parent.State.Clause)
-{
-    foreach (var secondLiteral in action.Clause)
-    {
-        if (firstLiteral.Name.Equals(secondLiteral.Name)
-			&& firstLiteral.Proposition != secondLiteral.Proposition)
-        {
-            // Merger samtlige literals fra de to clauses
-            // f.eks. $ (A \lor \lnot B) \land (A \lor B) $ -> $A \lor \lnot B \lor A \lor B $
-            state.Clause = parent.State.Clause.Concat(action.Clause).ToList();
+foreach (var firstLiteral in parent.State.Clause) {
+  foreach (var secondLiteral in action.Clause) {
+    if (firstLiteral.Name.Equals(secondLiteral.Name)
+      && firstLiteral.Proposition != secondLiteral.Proposition) {
+      // Merger samtlige literals fra de to clauses
+      // f.eks. $ (A \lor \lnot B) \land (A \lor B) $ -> $A \lor \lnot B \lor A \lor B $
+      state.Clause = parent.State.Clause.Concat(action.Clause).ToList();
 
-            // Fjern en enkelt positiv og en enkelt negativ af de literals med samme navn
-            // f.eks. $A \lor \lnot B \lor A \lor B $ -> $A \lor A $
-            state.Clause.Remove(state.Clause.First(lit => lit.Name.Equals(secondLiteral.Name)
-				&& lit.Proposition));
-            state.Clause.Remove(state.Clause.First(lit => lit.Name.Equals(secondLiteral.Name)
-				&& !lit.Proposition));
+      // Fjern en enkelt positiv og en enkelt negativ af de literals med samme navn
+      // f.eks. $A \lor \lnot B \lor A \lor B $ -> $A \lor A $
+      state.Clause.Remove(state.Clause.First(lit => lit.Name.Equals(secondLiteral.Name)
+        && lit.Proposition));
+      state.Clause.Remove(state.Clause.First(lit => lit.Name.Equals(secondLiteral.Name)
+        && !lit.Proposition));
 
-            // Fjerne duplikater, f.eks. $A \lor A \lor C$ -> $A \lor C$
-            state.Clause = state.Clause.Distinct().ToList();
+      // Fjerne duplikater, f.eks. $A \lor A \lor C$ -> $A \lor C$
+      state.Clause = state.Clause.Distinct().ToList();
 
-            return new InferenceNode(parent, parent.Target, state,
-				new InferenceAction(state, parent.Target));
-        }
+      return new InferenceNode(parent, parent.Target, state,
+      new InferenceAction(state, parent.Target));
     }
+  }
 }
 \end{lstlisting}
 
@@ -284,25 +285,19 @@ Dermed bliver den estimerede totale længde af søgningen \code{f(n)}:
 Kørsel af en inferens søgning foregår på næsten identisk vis som i rutefinding. Der parses en tekstfil til en knowledge base og denne samt et start og mål \code{State} gives som parametre til \code{AStar.Search()} funktionen. På samme måde som rutefinding fås naturligvis også et resultat tilbage i form af et \code{SearchResult}
 
 \section*{Konklusion} 
+Vi har succesfuldt implementeret både rutefinding og inferens maskinen, som bruger samme søgemoduler og deler mange egenskaber. Der er plads til forbedring, specielt hvad angår performance.
+
+Vi har formået at lave et brugbart program og teste det i mange henseender. Ydermere har vi visualiseret rutefindingen, både for at verificerer knowledge baserne, og for at få en bedre indsigt i hvordan vores søgealgoritme går til værks.
+
 \subsection{Output?}
 \subsection{Status på engine}
 Fejler uden heuristik på PQ-inferens.
 Mangler at implementere at én resolve kan give flere Nodes.
 Tager flere iterationer med H(n) på KBH-rutefinding
+Prioritetskø som frontier (burde bruge minhob til køen)
+Vi burde bruge HashSet til klausuler
 
 \section*{Datastrukturer}
 Klausuler som struct med Navn + Proposition
-Vi burde bruge HashSet (virker ikke?!)
-KB er en liste af klausuler
-State har klausuler
-Node har state
-Prioritetskø som frontier (burde bruge minhob til køen)
-
-\section*{Kørsel af programmet}
-Parser .kb filer til en KB
-Search tager kb og Target state (tom klausul for inference, state for routefinding)
-
-
-
 
 \end{document}
