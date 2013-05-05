@@ -25,6 +25,7 @@ namespace Heureka.Common
                 explored.Add(currentNode.State);
                 //Get available actions to the State of the current Node
                 var actions = kb.ActionsForNode(currentNode);
+//Explore /expand the current node
                 foreach (var action in actions)
                 {
                     var child = kb.Resolve(currentNode, action, end, explored);
