@@ -36,7 +36,7 @@ namespace Heureka.Common
                         statesSearched++;
                         
                     }
-                    else if(false)
+                    else if(true)
                     {
                         //Giver mening hvis man ser eksemplet i bogen s. 84. Måske den kun skal køres én gang når "end" er nået?
                         for (int i = 0; i < frontier.Count; i++)
@@ -47,7 +47,7 @@ namespace Heureka.Common
                                 //System.Console.WriteLine("fronter[" + i + "].PathCost: " + frontier[i].PathCost + ", child.PathCost: " + child.PathCost);
                                 //System.Console.WriteLine("fronter[" + i + "].EstimatedTotalCost: " + frontier[i].EstimatedTotalPathCost + ", child.EstimatedTotalCost: " + child.EstimatedTotalPathCost);
                                 //System.Console.WriteLine("number of nodes added to frontier: " + statesSearched);
-                                //System.Console.WriteLine("X: " +((RouteFinding.RouteFindingNode)child).State.X);
+                                //System.Console.WriteLine("X: " + ((RouteFinding.RouteFindingNode)child).State.X);
                                 //System.Console.WriteLine("Y: " + ((RouteFinding.RouteFindingNode)child).State.Y);
                                 //System.Console.WriteLine("child.parentX: " + ((RouteFinding.RouteFindingNode)child.Parent).State.X);
                                 //System.Console.WriteLine("child.parentY: " + ((RouteFinding.RouteFindingNode)child.Parent).State.Y);

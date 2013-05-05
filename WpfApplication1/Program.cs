@@ -31,13 +31,13 @@ namespace Heureka
             var suite = new TestSuite("Route finding", false);
             suite.AddTest("Manhattan", "route_kbs/manhattan.kb", "0 0,9 5", true);
             suite.AddTest("Copenhagen", "route_kbs/copenhagen.kb", "45 70,65 100", true);
-            suite.AddTest("Copenhagen", "route_kbs/copenhagen_holy_moses.kb", "45 70,65 100", true);
+            suite.AddTest("Copenhagen", "route_kbs/copenhagen_holy_moses.kb", "10 70,65 100", true);
             suite.AddTest("Romania", "route_kbs/romanian_cities.kb", "18 18,204 146", true);
             suite.AddTest("Romania", "route_kbs/romanian_cities_simple.kb", "18 18,204 146", true);
 
             suite.Run();
 
-            this.PaintRoute("Copenhagen", "route_kbs/copenhagen_holy_moses.kb", 45, 70, 65, 100);
+            this.PaintRoute("Copenhagen", "route_kbs/copenhagen_holy_moses.kb", 10, 70, 65, 100);
         }
 
         private void RunInferenceTests()
@@ -70,7 +70,7 @@ namespace Heureka
         private void OnPaint(object sender, PaintEventArgs args)
         {
             if (this.RouteSearchResult == null)  return;
-            Painter.DrawKnowledgeBase(args.Graphics, this.RouteSearchResult.TraceNode as RouteFindingNode, this.RouteFindingKb, new RouteFindingState(45,70), new RouteFindingState(65, 100));
+            Painter.DrawKnowledgeBase(args.Graphics, this.RouteSearchResult.TraceNode as RouteFindingNode, this.RouteFindingKb, new RouteFindingState(10,70), new RouteFindingState(65, 100));
         }
     }
 }
