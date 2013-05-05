@@ -29,5 +29,10 @@ namespace Heureka.Inference
         {
             return this.Clause.GetHashCode();
         }
+
+        public override string ToString()
+        {
+            return string.Join(", ", this.Clause.Select(l => (l.Proposition ? "" : "-") + l.Name));
+        }
     }
 }

@@ -64,9 +64,9 @@ namespace Heureka.RouteFinding
             return this.Actions.Where(a => a.StartState.Equals(node.State)).ToList();
         }
 
-        public NodeAbstract Resolve(NodeAbstract node, ActionAbstract action, StateAbstract targetState, IEnumerable<StateAbstract> explored)
+        public NodeAbstract Resolve(NodeAbstract parent, ActionAbstract action, StateAbstract targetState, IEnumerable<StateAbstract> explored)
         {
-            return new RouteFindingNode(node, action, action.EndState as RouteFindingState, targetState as RouteFindingState);
+            return new RouteFindingNode(parent, action, action.EndState as RouteFindingState, targetState as RouteFindingState);
         }
     }
 }

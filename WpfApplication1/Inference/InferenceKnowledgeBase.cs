@@ -14,19 +14,19 @@ namespace Heureka.Inference
             this.Rules = new List<InferenceState>();
         }
 
-        public InferenceNode ApplyResolution(InferenceNode node, ActionAbstract act, IEnumerable<StateAbstract> explored)
+        public InferenceNode ApplyResolution(InferenceNode parent, ActionAbstract act, IEnumerable<StateAbstract> explored)
         {
             var state = new InferenceState();
             var action = act.StartState as InferenceState;
 
-            foreach (var literal in node.State.Clause)
+            foreach (var literal in parent.State.Clause)
             {
                 foreach (var rule in action.Clause)
                 {
                     if (literal.Name.Equals(rule.Name) && literal.Proposition != rule.Proposition)
                     {
                         // Merger samtlige literals fra de to clauses
-                        state.Clause = node.State.Clause.Concat(action.Clause).ToList();
+                        state.Clause = parent.State.Clause.Concat(action.Clause).ToList();
 
                         // Remove ONE positive
                         foreach (var lit in state.Clause)
@@ -37,6 +37,7 @@ namespace Heureka.Inference
                                 break;
                             }
                         }
+
                         // Remove ONE negation
                         foreach (var lit in state.Clause)
                         {
@@ -55,13 +56,13 @@ namespace Heureka.Inference
                                 ls.Add(lit);
                         }
                         state.Clause = ls;
-                        return new InferenceNode(node, node.Target, state, new InferenceAction(state, node.Target));
+                        return new InferenceNode(parent, parent.Target, state, new InferenceAction(state, parent.Target));
                     }
                 }
             }
 
             //Fjerner resten af modsatte literals..            
-            return new InferenceNode(node, node.Target, state, new InferenceAction(state, node.Target));
+            return new InferenceNode(parent, parent.Target, state, new InferenceAction(state, parent.Target));
         }
 
         public IEnumerable<ActionAbstract> ActionsForNode(NodeAbstract node)
@@ -113,9 +114,9 @@ namespace Heureka.Inference
             return actions;
         }
 
-        public NodeAbstract Resolve(NodeAbstract node, ActionAbstract action, StateAbstract targetState, IEnumerable<StateAbstract> explored)
+        public NodeAbstract Resolve(NodeAbstract parent, ActionAbstract action, StateAbstract targetState, IEnumerable<StateAbstract> explored)
         {
-            return this.ApplyResolution(node as InferenceNode, action, explored);
+            return this.ApplyResolution(parent as InferenceNode, action, explored);
         }
 
         public static InferenceKnowledgeBase Parse(string[] lines)
