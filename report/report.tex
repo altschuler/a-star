@@ -273,7 +273,12 @@ foreach (var firstLiteral in parent.State.Clause)
 \end{lstlisting}
 
 \subsection{Heuristik}
-Den heuristiske værdi i inferens er simpelthen lig med antallet af literaler i en klausul. Det er den fordi målet altid er den tomme klausul, da vi benytter indirekte bevis.
+Den heuristiske værdi i inferens er simpelthen lig med antallet af literaler i en klausul. Det er den fordi målet altid er den tomme klausul, dvs. indeholdende nul literaler, da vi benytter indirekte bevisførelse.
+Dermed bliver den estimerede totale længde af søgningen \code{f(n)}:
+\[ h(n) = this.State.Clause.Count \]
+\[ g(n) = n.PathCost = n.Parent.PathCost + 1\]
+\[ f(n) = g(n) + h(n) \]
+
 
 \subsection{Setup og kørsel af programmet}
 Kørsel af en inferens søgning foregår på næsten identisk vis som i rutefinding. Der parses en tekstfil til en knowledge base og denne samt et start og mål \code{State} gives som parametre til \code{AStar.Search()} funktionen. På samme måde som rutefinding fås naturligvis også et resultat tilbage i form af et \code{SearchResult}
