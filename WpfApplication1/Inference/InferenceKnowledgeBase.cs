@@ -17,20 +17,20 @@ namespace Heureka.Inference
         public InferenceNode ApplyResolution(InferenceNode parent, ActionAbstract act)
         {
             var state = new InferenceState();
-            var action = act.StartState as InferenceState;
+            var actionState = act.StartState as InferenceState;
 
-            foreach (var literal in parent.State.Clause)
+            foreach (var firstLiteral in parent.State.Clause)
             {
-                foreach (var rule in action.Clause)
+                foreach (var secondLiteral in actionState.Clause)
                 {
-                    if (literal.Name.Equals(rule.Name) && literal.Proposition != rule.Proposition)
+                    if (firstLiteral.Name.Equals(secondLiteral.Name) && firstLiteral.Proposition != secondLiteral.Proposition)
                     {
                         // Merger samtlige literals fra de to clauses
-                        state.Clause = parent.State.Clause.Concat(action.Clause).ToList();
+                        state.Clause = parent.State.Clause.Concat(actionState.Clause).ToList();
 
                         // Fjern en enkelt positiv og en enkelt negativ
-                        state.Clause.Remove(state.Clause.First(lit => lit.Name.Equals(rule.Name) && lit.Proposition));
-                        state.Clause.Remove(state.Clause.First(lit => lit.Name.Equals(rule.Name) && !lit.Proposition));
+                        state.Clause.Remove(state.Clause.First(lit => lit.Name.Equals(secondLiteral.Name) && lit.Proposition));
+                        state.Clause.Remove(state.Clause.First(lit => lit.Name.Equals(secondLiteral.Name) && !lit.Proposition));
 
                         // Fjerne duplikater, f.eks. A & A & B -> A & B
                         state.Clause = state.Clause.Distinct().ToList();

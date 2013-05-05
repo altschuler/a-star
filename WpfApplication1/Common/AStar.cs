@@ -42,7 +42,7 @@ namespace Heureka.Common
                         frontier.Add(child);
                         statesSearched++;
                     }
-                    else if(false)
+                    else if(true)
                     {
                         for (int i = 0; i < frontier.Count; i++)
                         {

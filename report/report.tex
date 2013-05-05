@@ -242,26 +242,31 @@ vand \land sol \to liv
 \]
 
 \subsection{Resolution}
-TODO
-Resolution af klausuler foregår ved 
-\begin{lstlisting}
-foreach (var literal in parent.State.Clause)
+Når metoden Resolve(\code{Node}, \code{Action}) bliver kaldet i inferens-delen, bliver der udført resolution af to klausuler. Det har vi implementeret på følgende måde:
+\begin{lstlisting}[mathescape]
+foreach (var firstLiteral in parent.State.Clause)
 {
-    foreach (var rule in action.Clause)
+    foreach (var secondLiteral in action.Clause)
     {
-        if (literal.Name.Equals(rule.Name) && literal.Proposition != rule.Proposition)
+        if (firstLiteral.Name.Equals(secondLiteral.Name)
+			&& firstLiteral.Proposition != secondLiteral.Proposition)
         {
             // Merger samtlige literals fra de to clauses
+            // f.eks. $ (A \lor \lnot B) \land (A \lor B) $ -> $A \lor \lnot B \lor A \lor B $
             state.Clause = parent.State.Clause.Concat(action.Clause).ToList();
 
-            // Fjern en enkelt positiv og en enkelt negativ
-            state.Clause.Remove(state.Clause.First(lit => lit.Name.Equals(rule.Name) && lit.Proposition));
-            state.Clause.Remove(state.Clause.First(lit => lit.Name.Equals(rule.Name) && !lit.Proposition));
+            // Fjern en enkelt positiv og en enkelt negativ af de literals med samme navn
+            // f.eks. $A \lor \lnot B \lor A \lor B $ -> $A \lor A $
+            state.Clause.Remove(state.Clause.First(lit => lit.Name.Equals(secondLiteral.Name)
+				&& lit.Proposition));
+            state.Clause.Remove(state.Clause.First(lit => lit.Name.Equals(secondLiteral.Name)
+				&& !lit.Proposition));
 
-            // Fjerne duplikater, f.eks. A & A & B -> A & B
+            // Fjerne duplikater, f.eks. $A \lor A \lor C$ -> $A \lor C$
             state.Clause = state.Clause.Distinct().ToList();
 
-            return new InferenceNode(parent, parent.Target, state, new InferenceAction(state, parent.Target));
+            return new InferenceNode(parent, parent.Target, state,
+				new InferenceAction(state, parent.Target));
         }
     }
 }
