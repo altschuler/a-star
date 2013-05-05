@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Heureka
+namespace Heureka.Inference
 {
     public struct Literal
     {

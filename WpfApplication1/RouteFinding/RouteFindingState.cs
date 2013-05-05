@@ -1,11 +1,13 @@
-﻿namespace Heureka
+﻿using Heureka.Common;
+
+namespace Heureka.RouteFinding
 {
-    public class StateRoutefinding : StateAbstract
+    public class RouteFindingState : StateAbstract
     {
         public int X { get; set; }
         public int Y { get; set; }
 
-        public StateRoutefinding(int x, int y)
+        public RouteFindingState(int x, int y)
         {
             this.X = x;
             this.Y = y;
@@ -18,7 +20,7 @@
 
         public override bool Equals(object obj)
         {
-            var other = obj as StateRoutefinding;
+            var other = obj as RouteFindingState;
             return (other.X.Equals(this.X) && other.Y.Equals(this.Y));
         }
 

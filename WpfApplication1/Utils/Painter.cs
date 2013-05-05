@@ -2,12 +2,13 @@ using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
+using Heureka.RouteFinding;
 
-namespace Heureka
+namespace Heureka.Utils
 {
     public static class Painter
     {
-        public static void DrawKnowledgeBase(Graphics gfx, NodeRoutefinding traceNode, RouteKnowledgeBase kb, StateRoutefinding startState, StateRoutefinding endState)
+        public static void DrawKnowledgeBase(Graphics gfx, RouteFindingNode traceNode, RouteFindingKnowledgeBase kb, RouteFindingState startState, RouteFindingState endState)
         {
             var offset = 10;
             var scale = Math.Max(kb.MaxX, kb.MaxY);
@@ -17,7 +18,7 @@ namespace Heureka
             var pen = new Pen(Color.FromArgb(100, 1, 1, 0)) { Width = 5 };
             pen.EndCap = LineCap.ArrowAnchor;
             pen.StartCap = LineCap.RoundAnchor;
-            foreach (var action in kb.Actions.Select(a => (ActionRoutefinding)a))
+            foreach (var action in kb.Actions.Select(a => (RouteFindingAction)a))
                 gfx.DrawLine(pen, action.StartState.X * scale + offset, action.StartState.Y * scale + offset,
                       action.EndState.X * scale + offset, action.EndState.Y * scale + offset);
 

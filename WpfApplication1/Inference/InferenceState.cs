@@ -1,22 +1,23 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Heureka.Common;
 
-namespace Heureka
+namespace Heureka.Inference
 {
-    public class StateInference : StateAbstract
+    public class InferenceState : StateAbstract
     {
         public List<Literal> Clause { get; set; }
 
-        public StateInference() : this(new List<Literal>()) { }
+        public InferenceState() : this(new List<Literal>()) { }
 
-        public StateInference(List<Literal> clause)
+        public InferenceState(List<Literal> clause)
         {
             this.Clause = clause;
         }
 
         public override bool Equals(object obj)
         {
-            var other = obj as StateInference;
+            var other = obj as InferenceState;
 
             if (other.Clause.Count != this.Clause.Count)
                 return false;

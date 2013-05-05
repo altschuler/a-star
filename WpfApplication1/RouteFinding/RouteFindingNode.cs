@@ -1,12 +1,13 @@
 ﻿using System;
+using Heureka.Common;
 
-namespace Heureka
+namespace Heureka.RouteFinding
 {
-    public class NodeRoutefinding : NodeAbstract
+    public class RouteFindingNode : NodeAbstract
     {
-        public NodeRoutefinding(StateRoutefinding state, StateRoutefinding target) : this(null, null, state, target) { }
+        public RouteFindingNode(RouteFindingState state, RouteFindingState target) : this(null, null, state, target) { }
 
-        public NodeRoutefinding(NodeAbstract parent, ActionAbstract action, StateRoutefinding state, StateRoutefinding target)
+        public RouteFindingNode(NodeAbstract parent, ActionAbstract action, RouteFindingState state, RouteFindingState target)
             : base(state, target, parent, action)
         {
             if (this.Parent != null && this.Action != null)
@@ -18,7 +19,7 @@ namespace Heureka
 
         public override int CompareTo(object obj)
         {
-            var other = obj as NodeRoutefinding;
+            var other = obj as RouteFindingNode;
             if (other == null) return 1;
             if (this.EstimatedTotalPathCost > other.EstimatedTotalPathCost)
                 return 1;
@@ -27,14 +28,14 @@ namespace Heureka
             return 0;
         }
 
-        new public StateRoutefinding State
+        new public RouteFindingState State
         {
-            get { return base.State as StateRoutefinding; }
+            get { return base.State as RouteFindingState; }
         }
 
-        new public NodeRoutefinding Parent
+        new public RouteFindingNode Parent
         {
-            get { return base.Parent as NodeRoutefinding; }
+            get { return base.Parent as RouteFindingNode; }
             set { base.Parent = value; }
         }
     }

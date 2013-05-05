@@ -1,17 +1,15 @@
 ﻿using System.Collections.Generic;
 
-namespace Heureka
+namespace Heureka.Common
 {
-    static class AStarSearcher
+    static class AStar
     {
-        public static SearchResult Search(StateAbstract end, NodeAbstract initialNode, IKnowledgeBase kb)
+        public static SearchResult Search(NodeAbstract initialNode, IKnowledgeBase kb)
         {
-            //Start_state er negeret "det man vil vise"
-            //End_state er [], den tomme klausul
             var frontier = new PriorityQueue<NodeAbstract>();
             var explored = new List<StateAbstract>();
             var statesSearched = 0; //Bliver kun brugt af os af ren interesse
-
+            var end = initialNode.Target;
             frontier.Add(initialNode);
             
             while (frontier.Count > 0)

@@ -1,17 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Heureka.Common;
 
-namespace Heureka
+namespace Heureka.RouteFinding
 {
-    public class RouteKnowledgeBase : IKnowledgeBase
+    public class RouteFindingKnowledgeBase : IKnowledgeBase
     {
         public List<ActionAbstract> Actions { get; set; }
         public List<StateAbstract> States { get; set; }
 
-        public static RouteKnowledgeBase Parse(string data)
+        public static RouteFindingKnowledgeBase Parse(string data)
         {
-            var kb = new RouteKnowledgeBase
+            var kb = new RouteFindingKnowledgeBase
                 {
                     Actions = new List<ActionAbstract>(),
                     States = new List<StateAbstract>()
@@ -36,26 +37,26 @@ namespace Heureka
                 var startState = kb.GetOrCreateState(sx, sy);
                 var endState = kb.GetOrCreateState(ex, ey);
 
-                var action = new ActionRoutefinding(actionName, startState, endState);
+                var action = new RouteFindingAction(actionName, startState, endState);
                 kb.Actions.Add(action);
             }
 
             return kb;
         }
 
-        public int MaxX { get { return this.States.Select(s => ((StateRoutefinding)s).X).Max(); } }
-        public int MaxY { get { return this.States.Select(s => ((StateRoutefinding)s).Y).Max(); } }
+        public int MaxX { get { return this.States.Select(s => ((RouteFindingState)s).X).Max(); } }
+        public int MaxY { get { return this.States.Select(s => ((RouteFindingState)s).Y).Max(); } }
 
-        protected StateRoutefinding GetOrCreateState(int px, int py)
+        protected RouteFindingState GetOrCreateState(int px, int py)
         {
-            var tmpState = new StateRoutefinding(px, py);
+            var tmpState = new RouteFindingState(px, py);
             var state = this.States.SingleOrDefault(s => s.Equals(tmpState));
             if (state == null)
             {
-                state = new StateRoutefinding(px, py);
+                state = new RouteFindingState(px, py);
                 this.States.Add(state);
             }
-            return (StateRoutefinding)state;
+            return (RouteFindingState)state;
         }
 
         public IEnumerable<ActionAbstract> ActionsForNode(NodeAbstract node)
@@ -65,14 +66,7 @@ namespace Heureka
 
         public NodeAbstract Resolve(NodeAbstract node, ActionAbstract action, StateAbstract targetState, IEnumerable<StateAbstract> explored)
         {
-            return new NodeRoutefinding(node, action, action.EndState as StateRoutefinding, targetState as StateRoutefinding);
+            return new RouteFindingNode(node, action, action.EndState as RouteFindingState, targetState as RouteFindingState);
         }
-    }
-
-    public interface IKnowledgeBase
-    {
-        IEnumerable<ActionAbstract> ActionsForNode(NodeAbstract node);
-
-        NodeAbstract Resolve(NodeAbstract node, ActionAbstract action, StateAbstract targetState, IEnumerable<StateAbstract> explored);
     }
 }
