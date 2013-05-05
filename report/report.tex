@@ -290,13 +290,20 @@ Fejler uden heuristik på PQ-inferens.
 Mangler at implementere at én resolve kan give flere Nodes.
 Tager flere iterationer med H(n) på KBH-rutefinding
 
-\section*{Datastrukturer}
-Klausuler som struct med Navn + Proposition
-Vi burde bruge HashSet (virker ikke?!)
-KB er en liste af klausuler
-State har klausuler
-Node har state
-Prioritetskø som frontier (burde bruge minhob til køen)
+\subsubsection{Datastrukturer}
+Vi har implementeringen ikke primært fokuseret på optimering, dog vil vi gerne nævne to oplagte muligheder for det:
+
+1) \code{Frontier} er en prioritetskø implementeret med en List, som vi sorterer ved indsættelse af \code{Nodes} i denne.
+Jf. Microsofts dokumentation\footnote{http://msdn.microsoft.com/en-us/library/b0zbh7b6.aspx} anvendes Quicksort ved sortering af en List.
+Best-case køretiden for denne metode er O( n * log(n) ), hvilket vi antager må være køretiden da \code{Frontier} altid er sorteret pånær højst ét element - det senest indsatte.
+Havde vi implementeret \code{Frontier} med en binær Min-Hob, havde køretiden for indsættelse blot været log(n).
+Derudover er der også fordele mht. køretid for Min-Hob ved søgning, da List anvender lineær søgning og ikke binær, og \code{A*} for hver iteration søger \code{Frontier} igennem.
+
+Derfor er det oplagt at anvende en binær Min-Hob i \code{Frontier}, hvis man ønsker at optimere.
+
+2) \code{Explored} bliver også gennemsøgt flere gange for hver iteration, og bliver hurtigt meget stor, hvorfor en effektiv søgning er ønskelig.
+Også til \code{Explored} har vi anvendt en List, hvor søgning efter matchende elementer har en køretid på O(n).
+I dette tilfælde er det oplagt at anvende et HashSet, da gennemsøgning er det primære \code{Explored} anvendes til, og søgning efter et specifikt element i et HashSet har en forventet køretid på O(1).
 
 \section*{Kørsel af programmet}
 Parser .kb filer til en KB
