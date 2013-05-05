@@ -1,0 +1,14 @@
+18 18 Sibiu_Fagaras 113 26
+113 26 Fagaras_Sibiu 18 18
+
+18 18 Sibiu_Rimnicu 42 65
+42 65 Rimnicu_Sibiu 18 18
+
+42 65 Rimnicu_Pitesti 128 108
+128 108 Pitesti_Rimnicu 42 65
+
+128 108 Pitesti_Bucharest 204 146
+204 146 Bucharest_Pitesti 128 108
+
+204 146 Bucharest_Fagaras 113 26
+113 26 Fagaras_Bucharest 204 146

@@ -89,9 +89,9 @@ Dette medfører at når en knude én gang har været udforsket, skal andre ruter/gre
 \subsection{Implementering af algoritmen}
 \begin{lstlisting}
 SearchResult Search(Node initialNode, KnowledgeBase kb)
-{ 	frontier = new PriorityQueue<NodeAbstract>();
+{  frontier = new PriorityQueue<NodeAbstract>();
    explored = new List<StateAbstract>();
-   end = initialNode.Target;  //StateAbstract
+   end = initialNode.Target;  //The target/goal state
    frontier.Add(initialNode);
     
    while (frontier.Count > 0){
