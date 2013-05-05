@@ -56,20 +56,39 @@ breakatwhitespace=true }
 \maketitle
 
 \textbf{Abstract} \\ 
-I denne opgave undersøger vi teori og implementation af heuristiske søge metoder. Vi benytter \code{A*} søgning til både at finde vej gennem et bykort og til at udlede logiske slutninger.
+I denne opgave gennemgås hvordan deduktion i sætningslogik (eng: Propositional Logic) samt rutefinding kan optimeres ved at repræsentere disse som grafer.
+Når denne type problemer er repræsenteret som grafer, er det muligt at anvende \code{A*}-algoritmen, med en passende heuristisk funktion, til at finde en løsning mere effektivt end ved eksempelvis Breadth-First-Search (BFS) eller Uniform-Cost-Search (UCS).
+I opgaven vil teorien bag samt implementationen blive gennemgået.
 
 \clearpage
 
 \section{Introduktion} 
+
 Til projektet har vi brugt \code{C\#} til implementation af programmet. 
 
-\section{A* generelt} 
-Derp derp
+\section{\code{A*} generelt} 
+\code{A*}-algoritmen bruges generelt til at søge mere effektivt i grafer, end \code{BFS} og \code{UCS}, som den tager udgangspunkt i.
+Algoritmen forudsætter dog at der er tale om informeret søgning, hvilket betyder at man fra en vilkårlig knude kan estimere hvor langt man er fra mål-knuden i søgningen, samt at der holdes styr på hvor dybt den givne knude ligger i søgetræet.
+
+\code{BFS} prioriterer at man udforsker knuder, sådan at dybden af grenene i søgetræet maksimalt er dybden én fra hinanden.
+Dette opnås ved at lægge knuderne i en \code{FIFO-kø}.
+
+\code{UCS} bygger videre på \code{BFS}, men introducerer en cost-funktion, \code{g(n)}, som anvender vægtning af kanterne mellem knuder til at holde søgegrenenes længde uniform.
+\code{g(n)} er summen af kantlængderne fra rodknuden til den nuværende.
+\code{FIFO-køen} udskiftes med en prioritetskø, der netop bruger \code{g(n)} til at afgøre hvilken knude der skal udforskes som den næste.
+
+\code{A*} er en videreudvikling af \code{UCS}, der anvender en heuristisk-funktion, \code{h(n)}, som forsøger at forudsige hvor langt der højst er til mål-knuden fra en given knude.
+Ved at tage summen af \code{g(n)} og \code{h(n)} har man et optimistisk estimat for den totale længde af den korteste rute fra en knude i prioritetskøen, \code{f(n)}.
+Hermed forsøger algoritmen direkte at følge den korteste rute til mål-knuden.
+
+Når algoritmen udforsker en knude, vil det i kraft af \code{f(n)}, være den på den korteste rute til mål-knuden gennem den givne knude.
+Dette medfører at når en knude én gang har været udforsket, skal andre ruter/grene af søgningen ikke efterfølgende udforske ruter hvori den indgår, da disse vil have større \code{f(n)} i sidste ende.
+
 \subsection{Algoritmen}
 Derp derp derp
 
 \subsection{Cost-funktion og Heurestik}
-Mere derp
+Er vel beskrevet under \code{A*)} generelt?
 
 \section{Rutefinding} 
 \subsection{Repræsentation af data / Datastrukturer}
