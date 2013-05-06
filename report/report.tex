@@ -288,7 +288,7 @@ Dermed bliver den estimerede totale længde af søgningen \code{f(n)}:
 \subsection{Setup og kørsel af programmet}
 Kørsel af en inferens søgning foregår på næsten identisk vis som i rutefinding. Der parses en tekstfil til en knowledge base og denne samt et start og mål \code{State} gives som parametre til \code{AStar.Search()} funktionen. På samme måde som rutefinding fås naturligvis også et resultat tilbage i form af et \code{SearchResult}
 
-\section*{Konklusion} 
+\section{Konklusion} 
 Vi har succesfuldt implementeret både rutefinding og inferens maskinen, som bruger samme søgemoduler og deler mange egenskaber. Der er plads til forbedring, specielt hvad angår performance.
 
 Vi har formået at lave et brugbart program og teste det i mange henseender. Ydermere har vi visualiseret rutefindingen, både for at verificerer knowledge baserne, og for at få en bedre indsigt i hvordan vores søgealgoritme går til værks.
@@ -340,9 +340,5 @@ Derfor er det oplagt at anvende en binær Min-Hob i \code{Frontier}, hvis man øns
 2) \code{Explored} bliver også gennemsøgt flere gange for hver iteration, og bliver hurtigt meget stor, hvorfor en effektiv søgning er ønskelig.
 Også til \code{Explored} har vi anvendt en List, hvor søgning efter matchende elementer har en køretid på O(n).
 I dette tilfælde er det oplagt at anvende et HashSet, da gennemsøgning er det primære \code{Explored} anvendes til, og søgning efter et specifikt element i et HashSet har en forventet køretid på O(1).
-
-\section*{Kørsel af programmet}
-Parser .kb filer til en KB
-Search tager kb og Target state (tom klausul for inference, state for routefinding)
 
 \end{document}
