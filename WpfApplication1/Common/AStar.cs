@@ -17,7 +17,7 @@ namespace Heureka.Common
             {
                 // Chooses the lowest-cost node in the frontier
                 var currentNode = frontier.Pop();
-
+                statesSearched++;
                 if (currentNode.State.Equals(end))
                     return new SearchResult(currentNode, statesSearched, true);
 
@@ -32,7 +32,7 @@ namespace Heureka.Common
                     {
                         explored.Add(child.State);
                         frontier.Add(child);
-                        statesSearched++;
+                        
                     }
                     else if(true)
                     {

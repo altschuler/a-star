@@ -41,7 +41,7 @@ breakatwhitespace=true }
 \fancyhf{} 
 \setlength{\headheight}{15pt}
 \setlength{\headsep}{25pt} 
-\lfoot{Side \thepage{} af \pageref{LastPage}}
+\lfoot{Side \thepage{} af 8}
 \rfoot{07/05-2013} \lhead{02180 Intro to A.I.} 
 \chead{Heureka} 
 \rhead{}
@@ -70,7 +70,7 @@ I opgaven vil teorien bag samt implementationen blive gennemgået.
 
 Til projektet har vi brugt \code{C\#} til implementation af programmet. Vi har gjort brug af \code{LINQ}\footnote{\url{http://en.wikipedia.org/wiki/Language_Integrated_Query}} til data håndtering i mange tilfælde. 
 
-Vi har bestræbet os på at implementere et system der er generisk nok til at håndtere både inferens og rutefinding på hovedsageligt samme vis. Vi har implementeret tests af forskellige edge-cases, eksempelvis et tilfælde i inferens hvor ancestor resolution er nødvendig.
+Vi har bestræbt os på at implementere et system der er generisk nok til at håndtere både inferens og rutefinding på hovedsageligt samme vis. Vi har implementeret tests af forskellige edge-cases, eksempelvis et tilfælde i inferens hvor ancestor resolution er nødvendig.
 
 Vi gennemgår først hvordan søgningen foregår teoretisk, og derefter hvor det er implementeret for henholdsvis rutefinding og inferens, og forskellen derimellem.
 
@@ -115,9 +115,9 @@ Efter initialisering begynder den iterative søgning:
    	
     actions = kb.ActionsForNode(currentNode);//Handlinger der er relevante for knuden	
   
-    foreach (var action in actions) { //Knuden udforskes *** også frontier tjek?
+    foreach (var action in actions) { //Knuden udforskes
       child = kb.Resolve(currentNode, action, end); //Udfør handling
-      if (!explored.Contains(child.State) && !frontier.Contains(child)) {
+      if (!explored.Contains(child.State)) {
         explored.Add(child.State);
         frontier.Add(child);
       }
@@ -160,18 +160,18 @@ Hvis ovenstående kontrol undlades, risikeres det at søgningen returnerer en sub-
 \end{figure}
 
 \subsubsection{Prioritetskø}
-\code{A*} algoritmen gør brug af en såkaldt prioritetskø kaldet \code{frontier} i koden. Denne er implmenteret som en liste der sorterer alle elementerne ved hver indsættelse af et nyt element. Elementerne, som er \code{Node}s, sorteres efter deres totale estimerede cost til mål ($f(n)$), således at \code{Node}n der umiddelbart er mest lovende undersøges først. Dette er ikke den mest optimale måde at implementere en prioritets kø, men det er rigeligt til dette projekt.
+\code{A*} algoritmen gør brug af en såkaldt prioritetskø kaldet \code{frontier} i koden. Denne er implmenteret som en liste der sorterer alle elementerne ved hver indsættelse af et nyt element. Elementerne, som er \code{Node}s, sorteres efter deres totale estimerede cost til mål ($f(n)$), således at \code{Node}n der umiddelbart er mest lovende undersøges først. Dette er ikke den mest optimale måde at implementere en prioritets kø, men det er tilstrækkeligt til dette projekt.
 
 \section{Rutefinding} 
 I rutefinding har vi implementeret \code{A*} algoritmen med formålet at finde korteste vej i en vægtet graf, som repræsenterer faktiske kort over landområder.
-Vi har testet vores implementation med de fra undervisningen givne kort over dele af København og Manhattan, samt nogle vi selv har konstrueret for at ramme edge-cases.
+Vi har testet vores implementation med de fra undervisningen givne kort over dele af København og ``Manhattan'', samt nogle vi selv har konstrueret for at ramme edge-cases.
 
 \subsection{Repræsentation af data / Datastrukturer}
 I rutefinding består et \code{State} af et \code{(X,Y)} koordinat som beskriver knudens position på kortet. Dette er alt hvad der skal bruges for at udregne den heuristiske værdi fra en arbitrær knude til en given mål-\code{State}.
 
 En \code{Action} finder sin cost ved at udregne afstanden mellem sit \code{StartState} og \code{EndState}s koordinater.
 
-Knowledge basen for rutefinding genereres ud fra en tekstfil med følgende struktur:
+Knowledge basen (KB) for rutefinding genereres ud fra en tekstfil med følgende struktur:
 
 \begin{verbatim}
 startX_1 startY_1 navn_1 slutX_1 slutY_1
@@ -180,9 +180,9 @@ startX_2 startY_2 navn_2 slutX_2 slutY_2
 startX_n startY_n navn_n slutX_n slutY_n
 \end{verbatim}
 
-Dette bliver parset til to states (start og end) og en action i mellem dem, som alle bliver gemt i Knowledge basen. Alle \code{Action}s bliver fundet på forhånd så \code{A*} algoritmen ikke skal søge gennem \code{State}s under eksekvering, men blot kan slå de relevante \code{Action}s op. Det betyder et større pladsforbrug, og længere tid til parsing, men en bedre tidskompleksitet mht. selve søgningen.
+Dette bliver parset til to states (start og end) og en action i mellem dem, som alle bliver gemt i KB'en. Alle \code{Action}s bliver fundet på forhånd så \code{A*} algoritmen ikke skal søge gennem \code{State}s under eksekvering, men blot kan slå de relevante \code{Action}s op. Det betyder et større pladsforbrug, og længere tid til parsing, men en bedre tidskompleksitet mht. selve søgningen.
 
-Hver linie i knowledge basen repræsenterer en \emph{ensrettet} vej, hvilket vil sige at der skal to linier til at beskrive en vej på hvilken man både kan gå den ene og den anden vej.
+Hver linie i KB'en repræsenterer en \emph{ensrettet} vej, hvilket vil sige at der skal to linier til at beskrive en vej på hvilken man både kan gå den ene og den anden vej.
 
 
 \subsection{Heuristik}
@@ -199,14 +199,14 @@ Hvor \code{n.Parent} er den \code{Node} fra hvilken søgningen kom til den nuvære
 Det bemærkes at en \code{Node} har både en \code{Action} (som er den \code{Action} der blev taget for at komme til \code{Node}n) og et \code{State}, som skal bruges til at udregne den samlede cost (\code{PathCost}).
 
 \subsection{Setup og kørsel af programmet}
-Kørsel af en rutefinding foregår ved først at parse en tekstfil til en knowledge base. Den KB, sammen med et \code{StartState} og \code{EndState} gives som parametre til \code{AStar.Search()}, som returnerer et \code{SearchResult}. \code{SearchResult} indeholder den funde mål-\code{Node}, hvis der findes en sti dertil.
+Kørsel af en rutefinding foregår ved først at parse en tekstfil til en KB. Den KB, sammen med et \code{StartState} og \code{EndState} gives som parametre til \code{AStar.Search()}, som returnerer et \code{SearchResult}. \code{SearchResult} indeholder den funde mål-\code{Node}, hvis der findes en sti dertil.
 Denne \code{Node} er første element i en linked list af \code{Node}s som fører tilbage til knuden der blev søgt fra ved hjælp af deres \code{Parent}-egenskab. På den måde kan hele ruten printes/analyseres. 
 
-Vi har udvidet vores program med kode til at tegne en given rute-graf og den fundne rute mellem to knuder. På figur nedenfor ses hvordan programmet visualiserer en rute gennem København-grafen.
+Vi har udvidet vores program med kode til at tegne en given rute-graf og den fundne rute mellem to knuder. På figuren nedenfor ses hvordan programmet visualiserer en rute gennem København-grafen:
 
 \begin{figure}[H]
   \centering
-  \includegraphics{copenhagen.png}
+  \includegraphics[scale=0.65]{copenhagen.png}
   \label{scr:copenhagen}
   \caption{Ruten (markeret med grønt) fra start (blå) til slut (rød). Det bemærkes at de fleste veje er ensrettede og ruten derfor ikke tager den umiddelbart intuitive form. Det ér dog den optimale rute der er fundet og markeret.}
 \end{figure}
@@ -267,15 +267,12 @@ foreach (var firstLiteral in parent.State.Clause) {
       state.Clause.Remove(state.Clause.First(lit => lit.Name.Equals(secondLiteral.Name)
         && !lit.Proposition));
 
-      // Fjerner duplikater, f.eks. $A \lor A \lor C$ -> $A \lor C$
+      // Fjerner duplikater, f.eks. $A \lor A $ -> $A $
       state.Clause = state.Clause.Distinct().ToList();
 
       return new InferenceNode(parent, parent.Target, state, 
-                               new InferenceAction(state, parent.Target));
-    }
-  }
-}
-\end{lstlisting}
+        new InferenceAction(state, parent.Target));
+}}}\end{lstlisting}
 
 \subsection{Heuristik}
 Den heuristiske værdi i inferens er simpelthen lig med antallet af literaler i en klausul. Det er den fordi målet altid er den tomme klausul, dvs. indeholdende nul literaler, da vi benytter indirekte bevisførelse.
@@ -284,50 +281,54 @@ Dermed bliver den estimerede totale længde af søgningen \code{f(n)}:
 \[ g(n) = n.PathCost = n.Parent.PathCost + 1\]
 \[ f(n) = g(n) + h(n) \]
 
+I inferens-delen af programmet, har vi valgt kun at anvende \code{h(n)} som den værdi der sorteres efter i \code{Frontier} af to grunde:
+\begin{itemize}
+\item KB'en $(P \lor \lnot Q) , (\lnot P \lor Q) , (P \lor Q) , (\lnot P \lor \lnot Q)$, kan kun vises at være inkonsistent hvis vi udelukkende anvender \code{h(n)}
+\item Samtlige af de KB'er vi har implementeret tests for bliver løst ved højst lige så mange iterationer når der udelukkende anvendes \code{h(n)}. Eksempelvis bliver Espresso KB'en\footnote{\url{http://www.cs.toronto.edu/~sheila/2542/w06/readings/ijcai_pblr.pdf} slide 34} løst ved 20 iterationer når h(n) anvendes, mens der bruges 671 iterationer på at løse den, når \code{Frontier} sorteres efter f(n).
+\end{itemize}
+
+Ved at gøre dette er man ikke nødvendigvis sikker på at den optimale løsning nås, men i inferens formoder vi at det er vigtigere at kunne svare på hvorvidt et statement er sandt eller ej, fremfor \emph{hvordan} man kommer til den konklusion.
 
 \subsection{Setup og kørsel af programmet}
-Kørsel af en inferens søgning foregår på næsten identisk vis som i rutefinding. Der parses en tekstfil til en knowledge base og denne samt et start og mål \code{State} gives som parametre til \code{AStar.Search()} funktionen. På samme måde som rutefinding fås naturligvis også et resultat tilbage i form af et \code{SearchResult}
+Kørsel af en inferens søgning foregår på næsten identisk vis som i rutefinding. Der parses en tekstfil til en KB. Denne, og et start- og mål-\code{State}, gives som parametre til \code{AStar.Search()} funktionen. På samme måde som rutefinding fås naturligvis også et resultat tilbage i form af et \code{SearchResult}
 
 \section{Konklusion} 
 Vi har succesfuldt implementeret både rutefinding og inferens maskinen, som bruger samme søgemoduler og deler mange egenskaber. Der er plads til forbedring, specielt hvad angår performance.
 
-Vi har formået at lave et brugbart program og teste det i mange henseender. Ydermere har vi visualiseret rutefindingen, både for at verificerer knowledge baserne, og for at få en bedre indsigt i hvordan vores søgealgoritme går til værks.
+Vi har formået at lave et brugbart program og teste det i mange henseender. Ydermere har vi visualiseret rutefindingen, både for at verificere de forskellige KB'er, og for at få en bedre indsigt i hvordan vores søgealgoritme går til værks.
 
 \subsection{Output}
-Outputtet er ikke af nogen særlig interesse, med undtagelse af hvor mange iterationer der blev brugt til at finde løsningen, hvilket er det sidste tal i hver test linie. Følgende er outputtet af alle tests
+Outputtet er ikke af nogen særlig interesse, med undtagelse af hvor mange iterationer der blev brugt til at finde løsningen. Følgende er outputtet af nogle tests
 \begin{verbatim}
 --- Inference ---
-Test: Simple success: SUCCESS (solved 1)
-Test: Simple failure: SUCCESS (not solved 0)
-Test: Breakfast: SUCCESS (solved 15)
-Test: Ancestor (pq): SUCCESS (solved 6)
-Test: Espresso light: SUCCESS (solved 9)
-Test: Steam: SUCCESS (solved 29)
-Test: No steam (boiler off): SUCCESS (solved 6)
-Test: No steam (boiler broken): SUCCESS (solved 5)
-Test: Espresso: SUCCESS (solved 40)
-Passed 9 of 9 (100%)
+Test: Simple failure: SUCCESS (not solved in 1 iteration)
+Test: Breakfast: SUCCESS (solved in 10 iterations)
+Test: Ancestor (pq): SUCCESS (solved in 5 iterations)
+Test: Espresso light: SUCCESS (solved in 7 iterations)
+Test: No steam (boiler broken): SUCCESS (solved in 3 iterations)
+Test: Espresso: SUCCESS (solved in 20 iterations)
+Passed 6 of 6 (100%)
 
 --- Route finding ---
-Test: Manhattan ... Parsing ... Solving: SUCCESS (solved 66)
-Test: Copenhagen ... Parsing ... Solving: SUCCESS (solved 13)
-Test: Copenhagen ... Parsing ... Solving: SUCCESS (solved 7)
-Test: Romania ... Parsing ... Solving: SUCCESS (solved 4)
-Test: Romania ... Parsing ... Solving: SUCCESS (solved 4)
-Test: Biggie ... Parsing ... Solving: SUCCESS (solved 9999)
-Passed 6 of 6 (100%)
+Test: Manhattan ... Parsing ... Solving: SUCCESS (solved in 58 iterations)
+Test: Copenhagen ... Parsing ... Solving: SUCCESS (solved in 14 iterations)
+Test: Simple Copenhagen ... Parsing ... Solving: SUCCESS (solved in 8 iterations)
+Test: Manhattan with diagonals ... Parsing ... Solving: SUCCESS (solved in 30 iterations)
+Test: Big Manhattan ... Parsing ... Solving: SUCCESS (solved in 894 iterations)
+Passed 5 of 5 (100%)
 \end{verbatim}
 
 \subsection{Status på engine}
-Fejler uden heuristik på PQ-inferens.
-Mangler at implementere at én resolve kan give flere Nodes.
-Tager flere iterationer med H(n) på KBH-rutefinding
-Prioritetskø som frontier (burde bruge minhob til køen)
-Vi burde bruge HashSet til klausuler
+Der er stadigvæk to problemer med vores Heureka-program:
+\begin{itemize}
+\item Rutefindingen er ineffektiv ved ruter med mange optimale løsninger, hvilket ses ud fra ovenstående udskrift af testene: "Manhattan with diagonals" er et 30x30 kort, med diagonaler og "Big Manhattan" er et 30x30 kort, uden diagonaler. Begge tests går fra et hjørne diagonalt til det modsatte.
+\item Når der resolves i inferens-delen tages der ikke højde for at der kan komme flere end én ny klausul. Eksempelvis vil $Resolve((p \lor q),(\lnot p \lor \lnot q)) $ kun returnere enten $(p \lor \lnot p)$ eller $(q \lor \lnot q)$, selvom den bør returnere begge. Dette har vi ikke fået implementeret, og det kan være en mulig forklaring på at KB'en beskrevet i afsnit 4.3 ikke virker i nogle tilfælde.
+\end{itemize}
 
+Mangler at implementere at én resolve kan give flere Nodes.
 
 \subsubsection{Datastrukturer}
-Vi har implementeringen ikke primært fokuseret på optimering, dog vil vi gerne nævne to oplagte muligheder for det:
+Vi har i implementeringen ikke primært fokuseret på optimering, dog vil vi gerne nævne to oplagte muligheder for det:
 
 1) \code{Frontier} er en prioritetskø implementeret med en List, som vi sorterer ved indsættelse af \code{Nodes} i denne.
 Jf. Microsofts dokumentation\footnote{\url{http://msdn.microsoft.com/en-us/library/b0zbh7b6.aspx}} anvendes Quicksort ved sortering af en List.

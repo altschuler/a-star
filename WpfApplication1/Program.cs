@@ -30,15 +30,16 @@ namespace Heureka
             var suite = new TestSuite("Route finding", false);
             suite.AddTest("Manhattan", "route_kbs/manhattan.kb", "0 0,9 5", true);
             suite.AddTest("Copenhagen", "route_kbs/copenhagen.kb", "45 70,65 100", true);
-            suite.AddTest("Copenhagen", "route_kbs/copenhagen_holy_moses.kb", "10 70,65 100", true);
+            suite.AddTest("Simple Copenhagen", "route_kbs/copenhagen_holy_moses.kb", "10 70,65 100", true);
             suite.AddTest("Romania", "route_kbs/romanian_cities.kb", "18 18,204 146", true);
-            suite.AddTest("Romania", "route_kbs/romanian_cities_simple.kb", "18 18,204 146", true);
-            //suite.AddTest("Biggie", "route_kbs/biggie.kb", "0 0,99 1", true);
-            //suite.AddTest("Biggie smalls", "route_kbs/biggie_smalls.kb", "0 0,190 2", true);
+            suite.AddTest("Manhattan with diagonals", "route_kbs/map.kb", "0 0,29 29", true);
+            suite.AddTest("Simple Romania", "route_kbs/romanian_cities_simple.kb", "18 18,204 146", true);
+            suite.AddTest("Big Manhattan", "route_kbs/biggie.kb", "0 0,29 29", true);
+            //suite.AddTest("Big-small Manhattan", "route_kbs/biggie_smalls.kb", "0 0,190 10", true);
 
             suite.Run();
 
-            this.PaintRoute("Copenhagen", "route_kbs/copenhagen_holy_moses.kb", 10, 70, 65, 100);
+            this.PaintRoute("Manhattan with diagonals", "route_kbs/map.kb", 0, 0, 29, 29);
 
         }
 
@@ -72,7 +73,7 @@ namespace Heureka
         private void OnPaint(object sender, PaintEventArgs args)
         {
             if (this.RouteSearchResult == null) return;
-            Painter.DrawKnowledgeBase(args.Graphics, this.RouteSearchResult.TraceNode as RouteFindingNode, this.RouteFindingKb, new RouteFindingState(10, 70), new RouteFindingState(65, 100));
+            Painter.DrawKnowledgeBase(args.Graphics, this.RouteSearchResult.TraceNode as RouteFindingNode, this.RouteFindingKb, new RouteFindingState(0, 0), new RouteFindingState(29, 29));
         }
     }
 }

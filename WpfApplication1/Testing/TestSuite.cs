@@ -63,7 +63,7 @@ namespace Heureka.Testing
                     succeeded++;
 
                 Console.Write(result.Succeeded == test.Exepected ? ": SUCCESS" : ": FAILURE");
-                Console.WriteLine((result.Succeeded ? " (solved " : " (not solved ") + result.Iterations + ")");
+                Console.WriteLine((result.Succeeded ? " (solved " : " (not solved ") + "in " + result.Iterations + (result.Iterations == 1 ? " iteration)" : " iterations)"));
             }
             var succesRatio = (100 * succeeded) / (double)this.Tests.Count;
             Console.WriteLine("Passed " + succeeded + " of " + this.Tests.Count + " (" + succesRatio.ToString("000") + "%)");
